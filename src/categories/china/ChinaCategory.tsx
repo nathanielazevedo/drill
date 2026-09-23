@@ -4,7 +4,7 @@ import factsData from './data/facts.json';
 import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
-import type { DrillTarget, Mode, WorldData } from '@/lib/drill/types';
+import type { DrillTarget, WorldData } from '@/lib/drill/types';
 import { useDrillGame } from '@/lib/drill/useGame';
 
 const china = chinaData as unknown as WorldData;
@@ -25,12 +25,6 @@ const REGIONS = ['All', 'North', 'Northeast', 'East', 'Central & South', 'Southw
 const targets: DrillTarget[] = china.countries.map((p) => ({ id: p.id, name: p.name, region: p.region, f: p.f, a: p.a }));
 
 const copy: DrillCopy = { noun: 'province', nounPlural: 'provinces', groupLabel: 'Region', wholeSet: 'All of China' };
-
-const modeDescription: Record<Mode, string> = {
-  strict: 'One miss ends the run. Tracks your best streak.',
-  free: 'Misses show the answer and you carry on. Tracks your best score.',
-  missed: 'Drills just the provinces you have gotten wrong.',
-};
 
 const canSpeak = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
@@ -86,7 +80,7 @@ export function ChinaCategory() {
   const game = useDrillGame({ storageKey: 'shit-you-should-know.china.v1', targets, regions: REGIONS, hasFacts: true });
 
   return game.screen === 'home' ? (
-    <GroupHome game={game} copy={copy} modeDescription={modeDescription} />
+    <GroupHome game={game} copy={copy} />
   ) : (
     <DrillScreen basemap={china} game={game} copy={copy} renderFacts={(t) => <ProvinceFacts target={t} />} />
   );

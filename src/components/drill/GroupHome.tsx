@@ -1,39 +1,53 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import type { DrillCopy } from '@/lib/drill/copy';
-import { MODES, bestKey, regionKey, regionPool } from '@/lib/drill/logic';
-import type { Mode } from '@/lib/drill/types';
+import { type DrillCopy, pluralize } from '@/lib/drill/copy';
+import { bestKey, regionKey, regionPool } from '@/lib/drill/logic';
 import type { DrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
-import { MissedDialog } from './MissedDialog';
 
 interface GroupHomeProps {
   game: DrillGame;
   copy: DrillCopy;
-  modeDescription: Record<Mode, string>;
+  /** the rules line under the Start button */
+  runDescription?: string;
 }
 
-export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
-  const { store, byId, regions, hasFacts, setShowFacts, toggleRegion, startRun, resume, clearMissed, resetAll } = game;
-  const [missedOpen, setMissedOpen] = useState(false);
+function ToggleRow({ label, hint, on, onChange }: { label: string; hint: string; on: boolean; onChange: (on: boolean) => void }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      onClick={() => onChange(!on)}
+      className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-muted"
+    >
+      <div>
+        <div className="font-medium">{label}</div>
+        <div className="text-xs text-muted-foreground">{hint}</div>
+      </div>
+      <span className={cn('relative h-6 w-10 shrink-0 rounded-full transition-colors', on ? 'bg-foreground' : 'bg-muted-foreground/30')}>
+        <span
+          className={cn(
+            'absolute top-0.5 left-0.5 size-5 rounded-full bg-background shadow-sm transition-transform',
+            on && 'translate-x-4',
+          )}
+        />
+      </span>
+    </button>
+  );
+}
+
+export function GroupHome({ game, copy, runDescription = 'One miss ends the run.' }: GroupHomeProps) {
+  const { store, byId, regions, hasFacts, setShowFacts, setShuffle, toggleRegion, startRun, resume, resetAll } = game;
   const [resetArmed, setResetArmed] = useState(false);
 
   const targets = [...byId.values()];
   const countIn = (region: string) => regionPool(targets, region === 'All' ? [] : [region]).length;
   const isSelected = (region: string) => (region === 'All' ? !store.regions.length : store.regions.includes(region));
 
-  const missedCount = Object.keys(store.missed).length;
-  const selection = regionKey(store.regions, regions);
   const total = regionPool(targets, store.regions).length;
-  const bestStrict = store.best[bestKey('strict', selection)];
-  const bestFree = store.best[bestKey('free', selection)];
-
-  const modeMeta: Record<Mode, string | null> = {
-    strict: bestStrict ? `Best ${bestStrict}/${total}` : null,
-    free: bestFree != null ? `Best ${bestFree}%` : null,
-    missed: missedCount ? `${missedCount} to drill` : null,
-  };
+  const best = store.best[bestKey(regionKey(store.regions, regions))];
 
   return (
     <div className="flex flex-col gap-6">
@@ -41,10 +55,10 @@ export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
         <Card className="border-primary/30">
           <CardContent className="flex items-center justify-between gap-3 py-2">
             <div>
-              <div className="text-sm font-medium">Continue {MODES[store.run.mode].name}</div>
+              <div className="text-sm font-medium">Continue</div>
               <div className="text-xs text-muted-foreground">
                 {store.run.i} of {store.run.order.length} ·{' '}
-                {store.run.mode === 'missed' ? `missed ${copy.nounPlural}` : store.run.region === 'All' ? copy.wholeSet : store.run.region}
+                {store.run.region === 'All' ? copy.wholeSet : store.run.region}
               </div>
             </div>
             <Button type="button" size="sm" onClick={resume}>
@@ -55,12 +69,7 @@ export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
       )}
 
       <div>
-        <div className="mb-2 flex items-baseline justify-between text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          <span>{copy.groupLabel}</span>
-          <span className="normal-case tracking-normal">
-            {total} {total === 1 ? copy.noun : copy.nounPlural}
-          </span>
-        </div>
+        <div className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">{copy.groupLabel}</div>
         <div className="flex flex-wrap gap-2">
           {regions.map((region) => (
             <button
@@ -80,60 +89,39 @@ export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
         </div>
       </div>
 
-      {hasFacts && (
-        <button
-          type="button"
-          role="switch"
-          aria-checked={store.showFacts}
-          onClick={() => setShowFacts(!store.showFacts)}
-          className="flex items-center justify-between gap-3 rounded-lg border border-border px-4 py-3 text-left transition-colors hover:bg-muted"
-        >
-          <div>
-            <div className="font-medium">Show facts</div>
-            <div className="text-xs text-muted-foreground">
-              {store.showFacts
+      <div className="divide-y divide-border rounded-lg border border-border">
+        {hasFacts && (
+          <ToggleRow
+            label="Show facts"
+            on={store.showFacts}
+            onChange={setShowFacts}
+            hint={
+              store.showFacts
                 ? `Learn about each ${copy.noun} after you answer, then tap Next.`
-                : 'Off: right answers move on by themselves, for speedrunning.'}
-            </div>
-          </div>
-          <span
-            className={cn(
-              'relative h-6 w-10 shrink-0 rounded-full transition-colors',
-              store.showFacts ? 'bg-foreground' : 'bg-muted-foreground/30',
-            )}
-          >
-            <span
-              className={cn(
-                'absolute top-0.5 left-0.5 size-5 rounded-full bg-background shadow-sm transition-transform',
-                store.showFacts && 'translate-x-4',
-              )}
-            />
-          </span>
-        </button>
-      )}
-
-      <div className="flex flex-col gap-2">
-        {(Object.keys(MODES) as Mode[]).map((mode) => (
-          <button
-            key={mode}
-            type="button"
-            disabled={mode === 'missed' && !missedCount}
-            onClick={() => startRun(mode)}
-            className="flex items-center justify-between gap-3 rounded-lg border border-border px-4 py-3 text-left transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-          >
-            <div>
-              <div className="font-medium">{MODES[mode].name}</div>
-              <div className="text-xs text-muted-foreground">{modeDescription[mode]}</div>
-            </div>
-            {modeMeta[mode] && <div className="shrink-0 text-xs font-medium text-muted-foreground">{modeMeta[mode]}</div>}
-          </button>
-        ))}
+                : 'Off: right answers move on by themselves, for speedrunning.'
+            }
+          />
+        )}
+        <ToggleRow
+          label="Shuffle"
+          on={store.shuffle}
+          onChange={setShuffle}
+          hint={store.shuffle ? 'A new random order every run.' : 'Off: the same order every run, so you can learn it.'}
+        />
       </div>
 
-      <div className="flex items-center justify-between">
-        <Button type="button" variant="ghost" size="sm" onClick={() => setMissedOpen(true)}>
-          Review missed{missedCount ? ` (${missedCount})` : ''}
+      <div className="flex flex-col gap-2">
+        {/* with a run to resume, Resume is the main action and this steps back */}
+        <Button type="button" variant={store.run ? 'outline' : 'default'} className="h-11 text-base" onClick={startRun}>
+          Start · {pluralize(total, copy)}
         </Button>
+        <p className="text-center text-xs text-muted-foreground">
+          {runDescription}
+          {best ? ` Best ${best}/${total}.` : ''}
+        </p>
+      </div>
+
+      <div className="flex items-center justify-end">
         <Button
           type="button"
           variant="ghost"
@@ -152,19 +140,6 @@ export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
           {resetArmed ? 'Tap again to erase everything' : 'Erase progress'}
         </Button>
       </div>
-
-      <MissedDialog
-        open={missedOpen}
-        onOpenChange={setMissedOpen}
-        store={store}
-        byId={byId}
-        copy={copy}
-        onDrill={() => {
-          setMissedOpen(false);
-          startRun('missed');
-        }}
-        onClear={clearMissed}
-      />
     </div>
   );
 }

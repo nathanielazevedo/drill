@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { bestKey } from '@/lib/drill/logic';
@@ -9,19 +10,17 @@ interface RunOverDialogProps {
   store: Store;
   target: DrillTarget;
   pickedName?: string;
+  /** the category's facts about the missed target, when facts are on */
+  facts?: ReactNode;
   onPlayAgain: () => void;
   onHome: () => void;
 }
 
-function missNote(pickedName: string | undefined, none: string): string {
-  return pickedName ? `You picked ${pickedName}` : none;
-}
-
-export function RunOverDialog({ open, run, store, target, pickedName, onPlayAgain, onHome }: RunOverDialogProps) {
-  const best = store.best[bestKey('strict', run.region)] || 0;
+export function RunOverDialog({ open, run, store, target, pickedName, facts, onPlayAgain, onHome }: RunOverDialogProps) {
+  const best = store.best[bestKey(run.region)] || 0;
   return (
     <Dialog open={open}>
-      <DialogContent showCloseButton={false} onEscapeKeyDown={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent className="max-h-[90svh] overflow-y-auto" showCloseButton={false} onEscapeKeyDown={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Run over</DialogTitle>
         </DialogHeader>
@@ -34,11 +33,12 @@ export function RunOverDialog({ open, run, store, target, pickedName, onPlayAgai
         <div className="rounded-lg border px-4 py-3 text-sm">
           <div className="text-xs text-muted-foreground">It was</div>
           <div className="font-medium">{target.name}</div>
-          <div className="mt-1 text-xs text-muted-foreground">{missNote(pickedName, 'You gave up')}</div>
+          {pickedName && <div className="mt-1 text-xs text-muted-foreground">You picked {pickedName}</div>}
+          {facts}
         </div>
         <div className="flex flex-col gap-2">
           <Button type="button" onClick={onPlayAgain}>
-            Start over
+            Play again
           </Button>
           <Button type="button" variant="outline" onClick={onHome}>
             Back to menu

@@ -39,39 +39,28 @@ export interface DrillTarget {
   a?: number;
 }
 
-export type Mode = 'strict' | 'free' | 'missed';
-
-export interface Miss {
-  id: string;
-  pickedId: string | null;
-}
-
+/** A run goes until the first miss, or until every target is answered. */
 export interface RunState {
-  mode: Mode;
   /** the selection key the run was started with ('All', or regions joined by ' + ') */
   region: string;
   order: string[];
   i: number;
   results: Record<string, 'ok' | 'bad'>;
   correct: number;
-  wrong: number;
-  misses: Miss[];
   finished?: boolean;
   newBest?: boolean;
 }
 
-export interface MissedEntry {
-  n: number;
-  t: number;
-}
-
 export interface Store {
   v: 1;
-  missed: Record<string, MissedEntry>;
+  /** best streak per selection, keyed by bestKey() */
   best: Record<string, number>;
   /** the regions selected on the home screen; empty means every target */
   regions: string[];
   /** show the category's facts after each answer (and wait for Next instead of auto-advancing) */
   showFacts: boolean;
+  /** ask targets in a fresh random order each run instead of the fixed one */
+  shuffle: boolean;
+  /** the run to resume; only saved once it has an answer in it */
   run: RunState | null;
 }

@@ -1,4 +1,4 @@
-import { type ReactNode, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget, WorldData } from '@/lib/drill/types';
@@ -21,40 +21,18 @@ interface DrillScreenProps {
   renderFacts?: (target: DrillTarget) => ReactNode;
 }
 
-function missNote(pickedName: string | undefined, none: string): string {
-  return pickedName ? `You picked ${pickedName}` : none;
-}
-
 export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: DrillScreenProps) {
-  const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, skip, advance, quitToHome, startRun } = game;
-  const [armed, setArmed] = useState(false);
-  const armTimer = useRef<number>(undefined);
-  const [prevTargetId, setPrevTargetId] = useState(targetId);
-
-  if (targetId !== prevTargetId) {
-    setPrevTargetId(targetId);
-    if (armed) setArmed(false);
-  }
+  const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, advance, quitToHome, startRun } = game;
 
   if (!run || !target) return null;
 
   const locked = phase !== 'asking';
-  const outcome = phase === 'ok' ? 'ok' : phase === 'bad' || phase === 'over' ? 'bad' : null;
+  const outcome = phase === 'ok' ? 'ok' : phase === 'over' ? 'bad' : null;
   const pickedName = pickedId ? byId.get(pickedId)?.name : undefined;
   const targetGeo = target.f ? { name: target.name, f: target.f, a: target.a ?? 0 } : null;
   // With facts showing, the answer card can push the bottom of the screen out of view, so Next
   // moves up to sit right above it.
-  const nextOnTop = showFacts && !!renderFacts && (phase === 'ok' || phase === 'bad');
-
-  const handleSkip = () => {
-    if (run.mode === 'strict' && !armed) {
-      setArmed(true);
-      armTimer.current = window.setTimeout(() => setArmed(false), 2500);
-      return;
-    }
-    setArmed(false);
-    skip();
-  };
+  const nextOnTop = showFacts && !!renderFacts && phase === 'ok';
 
   return (
     <div className="flex flex-col gap-4">
@@ -70,11 +48,6 @@ export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: D
         </Button>
       )}
 
-      {phase === 'bad' && (
-        <ResultBanner kind="bad" title={`It's ${target.name}`} sub={missNote(pickedName, 'You skipped this one')}>
-          {showFacts && renderFacts?.(target)}
-        </ResultBanner>
-      )}
       {phase === 'ok' && (
         <ResultBanner kind="ok" title={`✓ ${target.name}`}>
           {showFacts && renderFacts?.(target)}
@@ -83,29 +56,27 @@ export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: D
 
       <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
 
-      {!nextOnTop && (
-        <div className="flex gap-2">
-          {locked ? (
-            <Button type="button" className="flex-1" onClick={advance}>
-              Next
-            </Button>
-          ) : (
-            <Button type="button" variant="outline" className="flex-1" onClick={handleSkip}>
-              {run.mode === 'strict' ? (armed ? 'Tap again to end run' : 'Give up') : 'Skip'}
-            </Button>
-          )}
-        </div>
+      {phase === 'ok' && !nextOnTop && (
+        <Button type="button" onClick={advance}>
+          Next
+        </Button>
       )}
 
-      <RunOverDialog open={phase === 'over'} run={run} store={store} target={target} pickedName={pickedName} onPlayAgain={() => startRun(run.mode)} onHome={quitToHome} />
+      <RunOverDialog
+        open={phase === 'over'}
+        run={run}
+        store={store}
+        target={target}
+        pickedName={pickedName}
+        facts={showFacts ? renderFacts?.(target) : null}
+        onPlayAgain={startRun}
+        onHome={quitToHome}
+      />
       <RunDoneDialog
         open={phase === 'done'}
         run={run}
-        byId={byId}
-        missedCount={Object.keys(store.missed).length}
         copy={copy}
-        onDrillMissed={() => startRun('missed')}
-        onPlayAgain={() => startRun(run.mode === 'missed' ? 'free' : run.mode)}
+        onPlayAgain={startRun}
         onHome={quitToHome}
       />
     </div>

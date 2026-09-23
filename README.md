@@ -6,11 +6,11 @@ accounts — everything lives in `localStorage` on your device.
 ## Categories
 
 The map categories play on the same interactive world map (pan/zoom, fly-to, multiple choice) via a shared
-drill engine at `src/lib/drill/` and `src/components/drill/`.
+drill engine at `src/lib/drill/` and `src/components/drill/`. Every category plays the same way:
+one miss ends the run, and your best streak is kept per region.
 
-- **Countries** — name every country. Sudden Death, Free Play, and Missed Only modes; pick a
-  region first. Ported from a standalone map-drill app.
-- **Terrain** — oceans, lakes, mountain ranges, and deserts. Same modes, filtered by type instead
+- **Countries** — name every country; pick a region first. Ported from a standalone map-drill app.
+- **Terrain** — oceans, lakes, mountain ranges, and deserts, filtered by type instead
   of region. These don't have official boundaries, so the map shows a locator ring over the right
   area rather than a precise outline.
 - **US States** — all 50, filtered by Census region, with capital, largest city, statehood and

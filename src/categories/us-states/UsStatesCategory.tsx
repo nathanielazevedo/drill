@@ -3,7 +3,7 @@ import factsData from './data/facts.json';
 import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
-import type { DrillTarget, Mode, WorldData } from '@/lib/drill/types';
+import type { DrillTarget, WorldData } from '@/lib/drill/types';
 import { useDrillGame } from '@/lib/drill/useGame';
 
 const us = usData as unknown as WorldData;
@@ -26,13 +26,7 @@ const REGIONS = ['All', 'Northeast', 'Midwest', 'South', 'West'] as const;
 
 const targets: DrillTarget[] = us.countries.map((s) => ({ id: s.id, name: s.name, region: s.region, f: s.f, a: s.a }));
 
-const copy: DrillCopy = { noun: 'state', nounPlural: 'states', groupLabel: 'Region', wholeSet: 'All 50' };
-
-const modeDescription: Record<Mode, string> = {
-  strict: 'One miss ends the run. Tracks your best streak.',
-  free: 'Misses show the answer and you carry on. Tracks your best score.',
-  missed: 'Drills just the states you have gotten wrong.',
-};
+const copy: DrillCopy = { noun: 'state', nounPlural: 'states', groupLabel: 'Region', wholeSet: 'All states' };
 
 function ordinal(n: number): string {
   const tens = n % 100;
@@ -71,7 +65,7 @@ export function UsStatesCategory() {
   const game = useDrillGame({ storageKey: 'shit-you-should-know.us-states.v1', targets, regions: REGIONS, hasFacts: true });
 
   return game.screen === 'home' ? (
-    <GroupHome game={game} copy={copy} modeDescription={modeDescription} />
+    <GroupHome game={game} copy={copy} />
   ) : (
     <DrillScreen basemap={us} game={game} copy={copy} renderFacts={(t) => <StateFacts target={t} />} />
   );

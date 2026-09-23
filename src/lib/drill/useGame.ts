@@ -9,9 +9,9 @@ import {
   startRun as buildRun,
   toggleRegion,
 } from './logic';
-import type { DrillTarget, Mode, RunState, Store } from './types';
+import type { DrillTarget, RunState, Store } from './types';
 
-export type Phase = 'asking' | 'ok' | 'bad' | 'over' | 'done';
+export type Phase = 'asking' | 'ok' | 'over' | 'done';
 export type Screen = 'home' | 'game';
 
 interface GameState {
@@ -25,35 +25,23 @@ interface GameState {
 type Action =
   | { type: 'toggleRegion'; region: string }
   | { type: 'setShowFacts'; on: boolean }
-  | { type: 'startRun'; mode: Mode }
+  | { type: 'setShuffle'; on: boolean }
+  | { type: 'startRun' }
   | { type: 'resume' }
   | { type: 'pick'; pickedId: string }
-  | { type: 'skip' }
   | { type: 'advance' }
   | { type: 'quitToHome' }
-  | { type: 'clearMissed' }
   | { type: 'resetAll' };
 
-function recordStrict(store: Store, run: RunState): { store: Store; newBest: boolean } {
-  const k = bestKey('strict', run.region);
+function recordBest(store: Store, run: RunState): { store: Store; newBest: boolean } {
+  const k = bestKey(run.region);
   const cur = store.best[k] || 0;
   if (run.correct > cur) return { store: { ...store, best: { ...store.best, [k]: run.correct } }, newBest: true };
   return { store, newBest: false };
 }
 
-function recordFree(store: Store, run: RunState): { store: Store; newBest: boolean } {
-  const pct = Math.round((run.correct / run.order.length) * 100);
-  const k = bestKey('free', run.region);
-  const cur = store.best[k];
-  if (cur == null || pct > cur) return { store: { ...store, best: { ...store.best, [k]: pct } }, newBest: true };
-  return { store, newBest: false };
-}
-
 function finishRun(state: GameState, run: RunState): GameState {
-  let store: Store = { ...state.store, run: null };
-  let newBest = false;
-  if (run.mode === 'strict') ({ store, newBest } = recordStrict(store, run));
-  else if (run.mode === 'free') ({ store, newBest } = recordFree(store, run));
+  const { store, newBest } = recordBest({ ...state.store, run: null }, run);
   return { ...state, store, activeRun: { ...run, finished: true, newBest }, phase: 'done', pickedId: null };
 }
 
@@ -61,35 +49,16 @@ function applySucceed(state: GameState): GameState {
   const run = state.activeRun!;
   const target = run.order[run.i];
   const newRun: RunState = { ...run, correct: run.correct + 1, results: { ...run.results, [target]: 'ok' } };
-  let missed = state.store.missed;
-  if (run.mode === 'missed' && missed[target]) {
-    missed = { ...missed };
-    delete missed[target];
-  }
-  const store: Store = { ...state.store, missed, run: newRun };
-  return { ...state, store, activeRun: newRun, phase: 'ok', pickedId: null };
+  return { ...state, store: { ...state.store, run: newRun }, activeRun: newRun, phase: 'ok', pickedId: null };
 }
 
+// Any miss ends the run.
 function applyFail(state: GameState, pickedId: string | null): GameState {
   const run = state.activeRun!;
   const target = run.order[run.i];
-  const prev = state.store.missed[target];
-  const missed = { ...state.store.missed, [target]: { n: (prev?.n || 0) + 1, t: Date.now() } };
-  const newRun: RunState = {
-    ...run,
-    wrong: run.wrong + 1,
-    results: { ...run.results, [target]: 'bad' },
-    misses: [...run.misses, { id: target, pickedId }],
-  };
-
-  if (run.mode === 'strict') {
-    const { store: recorded, newBest } = recordStrict({ ...state.store, missed }, newRun);
-    const store: Store = { ...recorded, run: null };
-    return { ...state, store, activeRun: { ...newRun, finished: true, newBest }, phase: 'over', pickedId };
-  }
-
-  const store: Store = { ...state.store, missed, run: newRun };
-  return { ...state, store, activeRun: newRun, phase: 'bad', pickedId };
+  const newRun: RunState = { ...run, results: { ...run.results, [target]: 'bad' } };
+  const { store, newBest } = recordBest({ ...state.store, run: null }, newRun);
+  return { ...state, store, activeRun: { ...newRun, finished: true, newBest }, phase: 'over', pickedId };
 }
 
 function reducer(
@@ -106,12 +75,16 @@ function reducer(
     case 'setShowFacts':
       return { ...state, store: { ...state.store, showFacts: action.on } };
 
+    case 'setShuffle':
+      return { ...state, store: { ...state.store, shuffle: action.on } };
+
     case 'startRun': {
-      const run = buildRun(targets, state.store, action.mode, regions, ordered);
+      const run = buildRun(targets, state.store, regions, ordered);
       if (!run) return state;
+      // Not saved for resuming until the first answer: leaving straight away shouldn't leave a "Continue 0 of 50".
       return {
         ...state,
-        store: { ...state.store, run },
+        store: { ...state.store, run: null },
         activeRun: run,
         screen: 'game',
         phase: 'asking',
@@ -136,13 +109,8 @@ function reducer(
       return action.pickedId === target ? applySucceed(state) : applyFail(state, action.pickedId);
     }
 
-    case 'skip': {
-      if (state.phase !== 'asking' || !state.activeRun) return state;
-      return applyFail(state, null);
-    }
-
     case 'advance': {
-      if (state.phase !== 'ok' && state.phase !== 'bad') return state;
+      if (state.phase !== 'ok') return state;
       const run = state.activeRun!;
       const i = run.i + 1;
       if (i >= run.order.length) return finishRun(state, { ...run, i });
@@ -153,9 +121,6 @@ function reducer(
     case 'quitToHome':
       if (state.phase === 'over' || state.phase === 'done') return { ...state, screen: 'home', activeRun: null };
       return { ...state, screen: 'home' };
-
-    case 'clearMissed':
-      return { ...state, store: { ...state.store, missed: {} } };
 
     case 'resetAll':
       return { store: defaultStore(), activeRun: null, screen: 'home', phase: 'asking', pickedId: null };
@@ -194,7 +159,7 @@ export function useDrillGame({ storageKey, targets, regions, hasFacts = false, o
 
   const showFacts = hasFacts && state.store.showFacts;
 
-  // A correct answer auto-advances after a beat, unless there are facts to read; a wrong one waits for the player.
+  // A correct answer auto-advances after a beat, unless there are facts to read.
   const autoAdvance = !showFacts;
   useEffect(() => {
     if (!autoAdvance || state.phase !== 'ok') return;
@@ -224,13 +189,12 @@ export function useDrillGame({ storageKey, targets, regions, hasFacts = false, o
     pickedId: state.pickedId,
     toggleRegion: (region: string) => dispatch({ type: 'toggleRegion', region }),
     setShowFacts: (on: boolean) => dispatch({ type: 'setShowFacts', on }),
-    startRun: (mode: Mode) => dispatch({ type: 'startRun', mode }),
+    setShuffle: (on: boolean) => dispatch({ type: 'setShuffle', on }),
+    startRun: () => dispatch({ type: 'startRun' }),
     resume: () => dispatch({ type: 'resume' }),
     pick: (pickedId: string) => dispatch({ type: 'pick', pickedId }),
-    skip: () => dispatch({ type: 'skip' }),
     advance: () => dispatch({ type: 'advance' }),
     quitToHome: () => dispatch({ type: 'quitToHome' }),
-    clearMissed: () => dispatch({ type: 'clearMissed' }),
     resetAll: () => dispatch({ type: 'resetAll' }),
   };
 }

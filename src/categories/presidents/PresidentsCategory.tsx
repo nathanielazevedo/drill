@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
-import type { DrillTarget, Mode } from '@/lib/drill/types';
+import type { DrillTarget } from '@/lib/drill/types';
 import { useDrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
 import creditsData from './data/credits.json';
@@ -37,11 +37,7 @@ const targets: DrillTarget[] = presidents.map((p) => ({ id: p.id, name: p.name, 
 
 const copy: DrillCopy = { noun: 'president', nounPlural: 'presidents', groupLabel: 'Era', wholeSet: 'All presidents' };
 
-const modeDescription: Record<Mode, string> = {
-  strict: 'In order from Washington. One miss ends the run.',
-  free: 'In order from Washington. Misses show the answer and you carry on.',
-  missed: 'Drills just the presidents you have gotten wrong.',
-};
+const runDescription = 'In order from Washington. One miss ends the run.';
 
 const portrait = (id: string) => `${import.meta.env.BASE_URL}presidents/${id}.jpg`;
 
@@ -130,7 +126,7 @@ export function PresidentsCategory() {
   const nextId = game.run?.order[game.run.i + 1];
 
   return game.screen === 'home' ? (
-    <GroupHome game={game} copy={copy} modeDescription={modeDescription} />
+    <GroupHome game={game} copy={copy} runDescription={game.store.shuffle ? undefined : runDescription} />
   ) : (
     <DrillScreen
       game={game}

@@ -1,11 +1,5 @@
 import { hashStr, seededRand, shuffled } from './rng';
-import type { DrillTarget, Mode, RunState, Store } from './types';
-
-export const MODES: Record<Mode, { name: string }> = {
-  strict: { name: 'Sudden Death' },
-  free: { name: 'Free Play' },
-  missed: { name: 'Missed Only' },
-};
+import type { DrillTarget, RunState, Store } from './types';
 
 export const CHOICES = 8;
 
@@ -13,9 +7,9 @@ export function byIdMap(targets: DrillTarget[]): Map<string, DrillTarget> {
   return new Map(targets.map((t) => [t.id, t]));
 }
 
-// Every run uses the same order: one fixed shuffle of every target (or, for categories that
-// drill in sequence, the targets' own order). A region or the missed
-// list is just that order with the other targets filtered out, so runs stay repeatable.
+// By default every run uses the same order: one fixed shuffle of every target (or, for categories
+// that drill in sequence, the targets' own order). A region is just that order with the other
+// targets filtered out, so runs stay repeatable. The Shuffle setting deals a fresh order each run.
 export function masterOrder(targets: DrillTarget[]): string[] {
   const ids = targets.map((t) => t.id).sort();
   return shuffled(ids, seededRand(0x9e3779b9));
@@ -57,12 +51,13 @@ export function choicesFor(targets: DrillTarget[], byId: Map<string, DrillTarget
   );
 }
 
-export function bestKey(mode: Mode, region: string): string {
-  return `${mode}:${region}`;
+// The 'strict:' prefix is left over from when there were other modes; keeping it keeps saved bests.
+export function bestKey(region: string): string {
+  return `strict:${region}`;
 }
 
 export function defaultStore(): Store {
-  return { v: 1, missed: {}, best: {}, regions: [], showFacts: true, run: null };
+  return { v: 1, best: {}, regions: [], showFacts: true, shuffle: false, run: null };
 }
 
 export function loadStore(storageKey: string, targets: DrillTarget[], regions: readonly string[]): Store {
@@ -71,29 +66,25 @@ export function loadStore(storageKey: string, targets: DrillTarget[], regions: r
     const raw = localStorage.getItem(storageKey);
     const parsed = raw ? JSON.parse(raw) : null;
     if (!parsed || typeof parsed !== 'object') return defaultStore();
-    const { region: legacyRegion, ...rest } = parsed;
+    // older saves kept a single `region` string, and a missed list for the modes since removed
+    const { region: legacyRegion, missed: _missed, ...rest } = parsed;
     const out: Store = { ...defaultStore(), ...rest };
-    for (const id of Object.keys(out.missed || {})) if (!byId.has(id)) delete out.missed[id];
-    // older saves kept a single `region` string
+    out.best = Object.fromEntries(Object.entries(out.best || {}).filter(([k]) => k.startsWith('strict:')));
     const saved: unknown[] = Array.isArray(out.regions) ? out.regions : typeof legacyRegion === 'string' ? [legacyRegion] : [];
     out.regions = regions.filter((r) => r !== 'All' && saved.includes(r));
     if (regionKey(out.regions, regions) === 'All') out.regions = [];
     out.showFacts = out.showFacts !== false;
-    const r = out.run;
+    out.shuffle = out.shuffle === true;
+    // saved runs may carry fields from the removed Free Play and Missed Only modes
+    const { mode, wrong: _wrong, misses: _misses, ...r } = (out.run ?? {}) as RunState & Record<string, unknown>;
     const valid =
-      !!r &&
-      !!MODES[r.mode] &&
+      !!out.run &&
+      (mode === undefined || mode === 'strict') &&
       Array.isArray(r.order) &&
       r.order.length > 0 &&
       r.order.every((id) => byId.has(id)) &&
       r.i < r.order.length;
-    out.run = valid ? r : null;
-    if (out.run) {
-      out.run.results = out.run.results || {};
-      out.run.misses = Array.isArray(out.run.misses) ? out.run.misses : [];
-      out.run.correct = out.run.correct | 0;
-      out.run.wrong = out.run.wrong | 0;
-    }
+    out.run = valid ? { ...r, results: r.results || {}, correct: r.correct | 0 } : null;
     return out;
   } catch {
     return defaultStore();
@@ -108,27 +99,21 @@ export function saveStore(storageKey: string, store: Store): void {
   }
 }
 
-export function missedIds(store: Store): string[] {
-  return Object.keys(store.missed);
-}
-
 export function startRun(
   targets: DrillTarget[],
   store: Store,
-  mode: Mode,
   regions: readonly string[],
   ordered = false,
 ): RunState | null {
-  const ids = mode === 'missed' ? missedIds(store) : regionPool(targets, store.regions);
+  const ids = regionPool(targets, store.regions);
   if (!ids.length) return null;
   return {
-    mode,
-    region: mode === 'missed' ? 'All' : regionKey(store.regions, regions),
-    order: inMasterOrder(ordered ? targets.map((t) => t.id) : masterOrder(targets), ids),
+    region: regionKey(store.regions, regions),
+    order: store.shuffle
+      ? shuffled(ids, Math.random)
+      : inMasterOrder(ordered ? targets.map((t) => t.id) : masterOrder(targets), ids),
     i: 0,
     results: {},
     correct: 0,
-    wrong: 0,
-    misses: [],
   };
 }

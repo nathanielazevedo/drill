@@ -3,7 +3,7 @@ import featuresData from './data/features.json';
 import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
-import type { DrillTarget, Mode, WorldData } from '@/lib/drill/types';
+import type { DrillTarget, WorldData } from '@/lib/drill/types';
 import { useDrillGame } from '@/lib/drill/useGame';
 
 const world = worldData as unknown as WorldData;
@@ -35,17 +35,11 @@ const targets: DrillTarget[] = (featuresData as RawFeature[]).map((t) => ({
 
 const copy: DrillCopy = { noun: 'feature', nounPlural: 'features', groupLabel: 'Type', wholeSet: 'Everything' };
 
-const modeDescription: Record<Mode, string> = {
-  strict: 'One miss ends the run. Tracks your best streak.',
-  free: 'Misses show the answer and you carry on. Tracks your best score.',
-  missed: 'Drills just the features you have gotten wrong.',
-};
-
 export function TerrainCategory() {
   const game = useDrillGame({ storageKey: 'shit-you-should-know.terrain.v1', targets, regions: REGIONS });
 
   return game.screen === 'home' ? (
-    <GroupHome game={game} copy={copy} modeDescription={modeDescription} />
+    <GroupHome game={game} copy={copy} />
   ) : (
     <DrillScreen basemap={world} game={game} copy={copy} />
   );
