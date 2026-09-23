@@ -1,0 +1,193 @@
+.map-wrap {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #eef1f5;
+  border: 1px solid var(--border);
+}
+
+.map-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.map-svg:active {
+  cursor: grabbing;
+}
+.map-svg.moving .c,
+.map-svg.moving .ctx {
+  shape-rendering: optimizeSpeed;
+}
+
+.sea {
+  fill: #eef1f5;
+  stroke: none;
+}
+.grat {
+  fill: none;
+  stroke: rgba(15, 23, 42, 0.05);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+.ctx {
+  fill: #e2e5ea;
+  stroke: #e2e5ea;
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+.c {
+  fill: #c7ccd4;
+  stroke: #c7ccd4;
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+.c.out {
+  fill: #dde0e6;
+  stroke: #dde0e6;
+}
+.c.ok {
+  fill: #b7ecd4;
+  stroke: #b7ecd4;
+}
+.c.bad {
+  fill: #f7c3c9;
+  stroke: #f7c3c9;
+}
+.c.target {
+  fill: #0f172a;
+  stroke: #0f172a;
+}
+.c.target.ok {
+  fill: #16a34a;
+  stroke: #16a34a;
+}
+.c.target.bad {
+  fill: #dc2626;
+  stroke: #dc2626;
+}
+.borders {
+  fill: none;
+  stroke: rgba(15, 23, 42, 0.18);
+  stroke-width: 0.7px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+.sea-edge {
+  fill: none;
+  stroke: rgba(15, 23, 42, 0.12);
+  stroke-width: 1.2px;
+  vector-effect: non-scaling-stroke;
+}
+
+#overlay .ring {
+  fill: none;
+  stroke: #0f172a;
+  stroke-width: 2.2px;
+  vector-effect: non-scaling-stroke;
+}
+#overlay .pulse {
+  fill: rgba(15, 23, 42, 0.1);
+  stroke: #0f172a;
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 1.6s ease-out infinite;
+}
+#overlay .ring.ok,
+#overlay .pulse.ok {
+  stroke: #16a34a;
+}
+#overlay .ring.bad,
+#overlay .pulse.bad {
+  stroke: #dc2626;
+}
+#overlay .pulse.still {
+  animation: none;
+  opacity: 0;
+}
+#overlay .label {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-weight: 600;
+  fill: #0f172a;
+  stroke: #eef1f5;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+}
+
+.map-tools {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.map-tool {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes map-pulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .map-wrap {
+    background: #1a1d24;
+  }
+  .sea {
+    fill: #1a1d24;
+  }
+  .grat {
+    stroke: rgba(255, 255, 255, 0.05);
+  }
+  .ctx {
+    fill: #262a33;
+    stroke: #262a33;
+  }
+  .c {
+    fill: #3a3f4b;
+    stroke: #3a3f4b;
+  }
+  .c.out {
+    fill: #2c303a;
+    stroke: #2c303a;
+  }
+  .c.target {
+    fill: #f4f4f5;
+    stroke: #f4f4f5;
+  }
+  .borders {
+    stroke: rgba(255, 255, 255, 0.15);
+  }
+  .sea-edge {
+    stroke: rgba(255, 255, 255, 0.12);
+  }
+  #overlay .ring {
+    stroke: #f4f4f5;
+  }
+  #overlay .pulse {
+    stroke: #f4f4f5;
+    fill: rgba(244, 244, 245, 0.12);
+  }
+  #overlay .label {
+    fill: #f4f4f5;
+    stroke: #1a1d24;
+  }
+}
