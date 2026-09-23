@@ -24,6 +24,7 @@ interface GameState {
 
 type Action =
   | { type: 'toggleRegion'; region: string }
+  | { type: 'setShowFacts'; on: boolean }
   | { type: 'startRun'; mode: Mode }
   | { type: 'resume' }
   | { type: 'pick'; pickedId: string }
@@ -96,6 +97,9 @@ function reducer(targets: DrillTarget[], regions: readonly string[], state: Game
     case 'toggleRegion':
       return { ...state, store: { ...state.store, regions: toggleRegion(state.store.regions, action.region, regions) } };
 
+    case 'setShowFacts':
+      return { ...state, store: { ...state.store, showFacts: action.on } };
+
     case 'startRun': {
       const run = buildRun(targets, state.store, action.mode, regions);
       if (!run) return state;
@@ -162,11 +166,11 @@ export interface DrillConfig {
   targets: DrillTarget[];
   /** the region/type chips shown on the home screen; 'All' means every target. */
   regions: readonly string[];
-  /** move on by itself shortly after a correct answer; off when there's something to read first. Default true. */
-  autoAdvance?: boolean;
+  /** the category has facts to show after each answer, so offer the "show facts" setting. */
+  hasFacts?: boolean;
 }
 
-export function useDrillGame({ storageKey, targets, regions, autoAdvance = true }: DrillConfig) {
+export function useDrillGame({ storageKey, targets, regions, hasFacts = false }: DrillConfig) {
   const byId = useMemo<Map<string, DrillTarget>>(() => byIdMap(targets), [targets]);
 
   const [state, dispatch] = useReducer(
@@ -180,7 +184,10 @@ export function useDrillGame({ storageKey, targets, regions, autoAdvance = true 
 
   useEffect(() => saveStore(storageKey, state.store), [storageKey, state.store]);
 
-  // A correct answer auto-advances after a beat (if enabled); a wrong one waits for the player.
+  const showFacts = hasFacts && state.store.showFacts;
+
+  // A correct answer auto-advances after a beat, unless there are facts to read; a wrong one waits for the player.
+  const autoAdvance = !showFacts;
   useEffect(() => {
     if (!autoAdvance || state.phase !== 'ok') return;
     const t = setTimeout(() => dispatch({ type: 'advance' }), 900);
@@ -195,6 +202,8 @@ export function useDrillGame({ storageKey, targets, regions, autoAdvance = true 
     store: state.store,
     byId,
     regions,
+    hasFacts,
+    showFacts,
     screen: state.screen,
     phase: state.phase,
     run: state.activeRun,
@@ -203,6 +212,7 @@ export function useDrillGame({ storageKey, targets, regions, autoAdvance = true 
     choices,
     pickedId: state.pickedId,
     toggleRegion: (region: string) => dispatch({ type: 'toggleRegion', region }),
+    setShowFacts: (on: boolean) => dispatch({ type: 'setShowFacts', on }),
     startRun: (mode: Mode) => dispatch({ type: 'startRun', mode }),
     resume: () => dispatch({ type: 'resume' }),
     pick: (pickedId: string) => dispatch({ type: 'pick', pickedId }),

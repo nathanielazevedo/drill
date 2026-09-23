@@ -35,8 +35,12 @@ interface EngineApi {
   paintPool: (run: RunState | null) => void;
 }
 
-/** targets smaller than this projected area always get the locator ring, whatever the zoom */
-const RING_MAX_AREA = 1000;
+// The locator ring circles the target's focus frame. Big targets get a snugger ring so it still
+// fits on screen (and under the map's top edge) once the map has flown to them.
+function ringRadius([, , w, h]: [number, number, number, number]): number {
+  const half = Math.hypot(w, h) / 2;
+  return half * (half > 75 ? 1.05 : 1.3);
+}
 
 function buildSvgInner(world: WorldData): string {
   const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, borders, countries } = world;
@@ -152,22 +156,17 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
       const cy = y + h / 2;
       let cx = x + w / 2;
       cx += Math.round((e.view.cx - cx) / W) * W;
-      // Targets with no fillable shape of their own (nothing in `pathEls`, e.g. a lake or
-      // mountain range) have no other way to show where they are, so the ring always shows.
-      // Anything up to about Zimbabwe's size always gets it too: judging by on-screen size alone,
-      // mid-size countries (Tunisia, Ghana) lost the ring as soon as the map zoomed in on them.
-      const hasFill = e.targetId != null && e.pathEls.has(e.targetId);
-      const small = !hasFill || t.a < RING_MAX_AREA || Math.sqrt(t.a) / upp < 24;
-      const r = Math.max((Math.hypot(w, h) / 2) * 1.3, 18 * upp);
+      // Every target gets the ring, whatever its size or the zoom, so the question always
+      // looks the same.
+      const r = Math.max(ringRadius(t.f), 18 * upp);
       for (const el of [e.ring, e.pulse]) {
         el.setAttribute('cx', String(cx));
         el.setAttribute('cy', String(cy));
         el.setAttribute('r', String(r));
-        el.style.display = small ? '' : 'none';
       }
       const fs = 13.5 * upp;
       e.label.setAttribute('x', String(cx));
-      e.label.setAttribute('y', String(small ? cy - r - 10 * upp : cy));
+      e.label.setAttribute('y', String(cy - r - 10 * upp));
       e.label.setAttribute('font-size', String(fs));
       e.label.setAttribute('stroke-width', String(fs * 0.28));
     }
@@ -185,7 +184,9 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
       const [x, y, w, h] = f;
       const big = Math.min(1, Math.max(w, h * e.aspect) / (W * 0.35));
       const k = 2.6 - 1.3 * big;
-      const vw = Math.min(Math.max(w * k, h * k * e.aspect, 130), W * 1.03);
+      // leave room for the whole ring, plus its label above it
+      const ring = ringRadius(f) * 2 * 1.3;
+      const vw = Math.min(Math.max(w * k, h * k * e.aspect, ring, ring * e.aspect, 130), W * 1.03);
       return fitY({ cx: x + w / 2, cy: y + h / 2, w: vw });
     }
 

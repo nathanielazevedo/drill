@@ -69,5 +69,7 @@ export interface Store {
   best: Record<string, number>;
   /** the regions selected on the home screen; empty means every target */
   regions: string[];
+  /** show the category's facts after each answer (and wait for Next instead of auto-advancing) */
+  showFacts: boolean;
   run: RunState | null;
 }

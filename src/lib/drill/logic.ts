@@ -61,7 +61,7 @@ export function bestKey(mode: Mode, region: string): string {
 }
 
 export function defaultStore(): Store {
-  return { v: 1, missed: {}, best: {}, regions: [], run: null };
+  return { v: 1, missed: {}, best: {}, regions: [], showFacts: true, run: null };
 }
 
 export function loadStore(storageKey: string, targets: DrillTarget[], regions: readonly string[]): Store {
@@ -77,6 +77,7 @@ export function loadStore(storageKey: string, targets: DrillTarget[], regions: r
     const saved: unknown[] = Array.isArray(out.regions) ? out.regions : typeof legacyRegion === 'string' ? [legacyRegion] : [];
     out.regions = regions.filter((r) => r !== 'All' && saved.includes(r));
     if (regionKey(out.regions, regions) === 'All') out.regions = [];
+    out.showFacts = out.showFacts !== false;
     const r = out.run;
     const valid =
       !!r &&

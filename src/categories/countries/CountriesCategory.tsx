@@ -21,7 +21,7 @@ const modeDescription: Record<Mode, string> = {
 };
 
 export function CountriesCategory() {
-  const game = useDrillGame({ storageKey: 'shit-you-should-know.countries.v1', targets, regions: REGIONS, autoAdvance: false });
+  const game = useDrillGame({ storageKey: 'shit-you-should-know.countries.v1', targets, regions: REGIONS, hasFacts: true });
 
   return game.screen === 'home' ? (
     <GroupHome game={game} copy={copy} modeDescription={modeDescription} />

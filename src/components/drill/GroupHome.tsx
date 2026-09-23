@@ -15,7 +15,7 @@ interface GroupHomeProps {
 }
 
 export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
-  const { store, byId, regions, toggleRegion, startRun, resume, clearMissed, resetAll } = game;
+  const { store, byId, regions, hasFacts, setShowFacts, toggleRegion, startRun, resume, clearMissed, resetAll } = game;
   const [missedOpen, setMissedOpen] = useState(false);
   const [resetArmed, setResetArmed] = useState(false);
 
@@ -79,6 +79,38 @@ export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
           ))}
         </div>
       </div>
+
+      {hasFacts && (
+        <button
+          type="button"
+          role="switch"
+          aria-checked={store.showFacts}
+          onClick={() => setShowFacts(!store.showFacts)}
+          className="flex items-center justify-between gap-3 rounded-lg border border-border px-4 py-3 text-left transition-colors hover:bg-muted"
+        >
+          <div>
+            <div className="font-medium">Show facts</div>
+            <div className="text-xs text-muted-foreground">
+              {store.showFacts
+                ? `Learn about each ${copy.noun} after you answer, then tap Next.`
+                : 'Off: right answers move on by themselves, for speedrunning.'}
+            </div>
+          </div>
+          <span
+            className={cn(
+              'relative h-6 w-10 shrink-0 rounded-full transition-colors',
+              store.showFacts ? 'bg-foreground' : 'bg-muted-foreground/30',
+            )}
+          >
+            <span
+              className={cn(
+                'absolute top-0.5 left-0.5 size-5 rounded-full bg-background shadow-sm transition-transform',
+                store.showFacts && 'translate-x-4',
+              )}
+            />
+          </span>
+        </button>
+      )}
 
       <div className="flex flex-col gap-2">
         {(Object.keys(MODES) as Mode[]).map((mode) => (

@@ -23,7 +23,7 @@ function missNote(pickedName: string | undefined, none: string): string {
 }
 
 export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenProps) {
-  const { store, byId, phase, run, target, targetId, choices, pickedId, pick, skip, advance, quitToHome, startRun } = game;
+  const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, skip, advance, quitToHome, startRun } = game;
   const [armed, setArmed] = useState(false);
   const armTimer = useRef<number>(undefined);
   const [prevTargetId, setPrevTargetId] = useState(targetId);
@@ -58,12 +58,12 @@ export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenPro
 
       {phase === 'bad' && (
         <ResultBanner kind="bad" title={`It's ${target.name}`} sub={missNote(pickedName, 'You skipped this one')}>
-          {renderFacts?.(target)}
+          {showFacts && renderFacts?.(target)}
         </ResultBanner>
       )}
       {phase === 'ok' && (
         <ResultBanner kind="ok" title={`✓ ${target.name}`}>
-          {renderFacts?.(target)}
+          {showFacts && renderFacts?.(target)}
         </ResultBanner>
       )}
 
