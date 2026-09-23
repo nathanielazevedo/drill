@@ -22,4 +22,10 @@ export const CATEGORIES: CategoryDef[] = [
     description: 'Oceans, lakes, mountain ranges, and deserts.',
     Component: lazy(() => import('./terrain/TerrainCategory').then((m) => ({ default: m.TerrainCategory }))),
   },
+  {
+    id: 'presidents',
+    name: 'US Presidents',
+    description: 'All 45, in order, from their portraits.',
+    Component: lazy(() => import('./presidents/PresidentsCategory').then((m) => ({ default: m.PresidentsCategory }))),
+  },
 ];

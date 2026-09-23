@@ -31,10 +31,10 @@ export interface DrillTarget {
   name: string;
   /** the filterable grouping shown as chips on the home screen (a continent, a feature type, ...) */
   region: string;
-  /** focus frame [x, y, w, h] in the shared basemap's projection */
-  f: [number, number, number, number];
-  /** projected area, used to decide if a target needs a locator ring */
-  a: number;
+  /** focus frame [x, y, w, h] in the shared basemap's projection; only for targets shown on the map */
+  f?: [number, number, number, number];
+  /** projected area, for targets shown on the map */
+  a?: number;
 }
 
 export type Mode = 'strict' | 'free' | 'missed';

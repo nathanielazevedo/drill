@@ -13,7 +13,8 @@ export function byIdMap(targets: DrillTarget[]): Map<string, DrillTarget> {
   return new Map(targets.map((t) => [t.id, t]));
 }
 
-// Every run uses the same order: one fixed shuffle of every target. A region or the missed
+// Every run uses the same order: one fixed shuffle of every target (or, for categories that
+// drill in sequence, the targets' own order). A region or the missed
 // list is just that order with the other targets filtered out, so runs stay repeatable.
 export function masterOrder(targets: DrillTarget[]): string[] {
   const ids = targets.map((t) => t.id).sort();
@@ -116,13 +117,14 @@ export function startRun(
   store: Store,
   mode: Mode,
   regions: readonly string[],
+  ordered = false,
 ): RunState | null {
   const ids = mode === 'missed' ? missedIds(store) : regionPool(targets, store.regions);
   if (!ids.length) return null;
   return {
     mode,
     region: mode === 'missed' ? 'All' : regionKey(store.regions, regions),
-    order: inMasterOrder(masterOrder(targets), ids),
+    order: inMasterOrder(ordered ? targets.map((t) => t.id) : masterOrder(targets), ids),
     i: 0,
     results: {},
     correct: 0,

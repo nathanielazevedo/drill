@@ -11,7 +11,10 @@ import { RunOverDialog } from './RunOverDialog';
 import { WorldMap } from './WorldMap';
 
 interface DrillScreenProps {
-  basemap: WorldData;
+  /** the world map to show targets on; categories without one pass `renderStage` instead */
+  basemap?: WorldData;
+  /** what to show in place of the map for the current target (a portrait, a flag, ...) */
+  renderStage?: (target: DrillTarget, outcome: 'ok' | 'bad' | null) => ReactNode;
   game: DrillGame;
   copy: DrillCopy;
   /** extra detail about the target, shown in the result banner once it's been answered */
@@ -22,7 +25,7 @@ function missNote(pickedName: string | undefined, none: string): string {
   return pickedName ? `You picked ${pickedName}` : none;
 }
 
-export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenProps) {
+export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: DrillScreenProps) {
   const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, skip, advance, quitToHome, startRun } = game;
   const [armed, setArmed] = useState(false);
   const armTimer = useRef<number>(undefined);
@@ -38,7 +41,7 @@ export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenPro
   const locked = phase !== 'asking';
   const outcome = phase === 'ok' ? 'ok' : phase === 'bad' || phase === 'over' ? 'bad' : null;
   const pickedName = pickedId ? byId.get(pickedId)?.name : undefined;
-  const targetGeo = { name: target.name, f: target.f, a: target.a };
+  const targetGeo = target.f ? { name: target.name, f: target.f, a: target.a ?? 0 } : null;
   // With facts showing, the answer card can push the bottom of the screen out of view, so Next
   // moves up to sit right above it.
   const nextOnTop = showFacts && !!renderFacts && (phase === 'ok' || phase === 'bad');
@@ -57,7 +60,9 @@ export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenPro
     <div className="flex flex-col gap-4">
       <Hud run={run} store={store} phase={phase} copy={copy} onQuit={quitToHome} />
 
-      <WorldMap world={basemap} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />
+      {renderStage
+        ? renderStage(target, outcome)
+        : basemap && <WorldMap world={basemap} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />}
 
       {nextOnTop && (
         <Button type="button" onClick={advance}>

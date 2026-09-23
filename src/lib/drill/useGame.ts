@@ -92,7 +92,13 @@ function applyFail(state: GameState, pickedId: string | null): GameState {
   return { ...state, store, activeRun: newRun, phase: 'bad', pickedId };
 }
 
-function reducer(targets: DrillTarget[], regions: readonly string[], state: GameState, action: Action): GameState {
+function reducer(
+  targets: DrillTarget[],
+  regions: readonly string[],
+  ordered: boolean,
+  state: GameState,
+  action: Action,
+): GameState {
   switch (action.type) {
     case 'toggleRegion':
       return { ...state, store: { ...state.store, regions: toggleRegion(state.store.regions, action.region, regions) } };
@@ -101,7 +107,7 @@ function reducer(targets: DrillTarget[], regions: readonly string[], state: Game
       return { ...state, store: { ...state.store, showFacts: action.on } };
 
     case 'startRun': {
-      const run = buildRun(targets, state.store, action.mode, regions);
+      const run = buildRun(targets, state.store, action.mode, regions, ordered);
       if (!run) return state;
       return {
         ...state,
@@ -168,13 +174,15 @@ export interface DrillConfig {
   regions: readonly string[];
   /** the category has facts to show after each answer, so offer the "show facts" setting. */
   hasFacts?: boolean;
+  /** ask targets in the order given (e.g. presidents 1, 2, 3...) instead of a fixed shuffle. */
+  ordered?: boolean;
 }
 
-export function useDrillGame({ storageKey, targets, regions, hasFacts = false }: DrillConfig) {
+export function useDrillGame({ storageKey, targets, regions, hasFacts = false, ordered = false }: DrillConfig) {
   const byId = useMemo<Map<string, DrillTarget>>(() => byIdMap(targets), [targets]);
 
   const [state, dispatch] = useReducer(
-    (s: GameState, a: Action) => reducer(targets, regions, s, a),
+    (s: GameState, a: Action) => reducer(targets, regions, ordered, s, a),
     targets,
     (t) => {
       const store = loadStore(storageKey, t, regions);
