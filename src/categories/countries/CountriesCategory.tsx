@@ -4,6 +4,7 @@ import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget, Mode, WorldData } from '@/lib/drill/types';
 import { useDrillGame } from '@/lib/drill/useGame';
+import { CountryFacts } from './CountryFacts';
 
 const world = worldData as unknown as WorldData;
 
@@ -20,11 +21,11 @@ const modeDescription: Record<Mode, string> = {
 };
 
 export function CountriesCategory() {
-  const game = useDrillGame({ storageKey: 'shit-you-should-know.countries.v1', targets, regions: REGIONS });
+  const game = useDrillGame({ storageKey: 'shit-you-should-know.countries.v1', targets, regions: REGIONS, autoAdvance: false });
 
   return game.screen === 'home' ? (
     <GroupHome game={game} copy={copy} modeDescription={modeDescription} />
   ) : (
-    <DrillScreen basemap={world} game={game} copy={copy} />
+    <DrillScreen basemap={world} game={game} copy={copy} renderFacts={(t) => <CountryFacts target={t} />} />
   );
 }

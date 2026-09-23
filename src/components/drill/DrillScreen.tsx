@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import type { DrillCopy } from '@/lib/drill/copy';
-import type { WorldData } from '@/lib/drill/types';
+import type { DrillTarget, WorldData } from '@/lib/drill/types';
 import type { DrillGame } from '@/lib/drill/useGame';
 import { ChoiceGrid } from './ChoiceGrid';
 import { Hud } from './Hud';
@@ -14,13 +14,15 @@ interface DrillScreenProps {
   basemap: WorldData;
   game: DrillGame;
   copy: DrillCopy;
+  /** extra detail about the target, shown in the result banner once it's been answered */
+  renderFacts?: (target: DrillTarget) => ReactNode;
 }
 
 function missNote(pickedName: string | undefined, none: string): string {
   return pickedName ? `You picked ${pickedName}` : none;
 }
 
-export function DrillScreen({ basemap, game, copy }: DrillScreenProps) {
+export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenProps) {
   const { store, byId, phase, run, target, targetId, choices, pickedId, pick, skip, advance, quitToHome, startRun } = game;
   const [armed, setArmed] = useState(false);
   const armTimer = useRef<number>(undefined);
@@ -55,9 +57,15 @@ export function DrillScreen({ basemap, game, copy }: DrillScreenProps) {
       <WorldMap world={basemap} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />
 
       {phase === 'bad' && (
-        <ResultBanner kind="bad" title={`It's ${target.name}`} sub={missNote(pickedName, 'You skipped this one')} />
+        <ResultBanner kind="bad" title={`It's ${target.name}`} sub={missNote(pickedName, 'You skipped this one')}>
+          {renderFacts?.(target)}
+        </ResultBanner>
       )}
-      {phase === 'ok' && <ResultBanner kind="ok" title={`✓ ${target.name}`} />}
+      {phase === 'ok' && (
+        <ResultBanner kind="ok" title={`✓ ${target.name}`}>
+          {renderFacts?.(target)}
+        </ResultBanner>
+      )}
 
       <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
 

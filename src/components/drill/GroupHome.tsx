@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import type { DrillCopy } from '@/lib/drill/copy';
-import { MODES, bestKey } from '@/lib/drill/logic';
+import { MODES, bestKey, regionKey, regionPool } from '@/lib/drill/logic';
 import type { Mode } from '@/lib/drill/types';
 import type { DrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
@@ -15,17 +15,19 @@ interface GroupHomeProps {
 }
 
 export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
-  const { store, byId, regions, setRegion, startRun, resume, clearMissed, resetAll } = game;
+  const { store, byId, regions, toggleRegion, startRun, resume, clearMissed, resetAll } = game;
   const [missedOpen, setMissedOpen] = useState(false);
   const [resetArmed, setResetArmed] = useState(false);
 
   const targets = [...byId.values()];
-  const countIn = (region: string) => targets.filter((t) => region === 'All' || t.region === region).length;
+  const countIn = (region: string) => regionPool(targets, region === 'All' ? [] : [region]).length;
+  const isSelected = (region: string) => (region === 'All' ? !store.regions.length : store.regions.includes(region));
 
   const missedCount = Object.keys(store.missed).length;
-  const total = countIn(store.region);
-  const bestStrict = store.best[bestKey('strict', store.region)];
-  const bestFree = store.best[bestKey('free', store.region)];
+  const selection = regionKey(store.regions, regions);
+  const total = regionPool(targets, store.regions).length;
+  const bestStrict = store.best[bestKey('strict', selection)];
+  const bestFree = store.best[bestKey('free', selection)];
 
   const modeMeta: Record<Mode, string | null> = {
     strict: bestStrict ? `Best ${bestStrict}/${total}` : null,
@@ -53,16 +55,22 @@ export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
       )}
 
       <div>
-        <div className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">{copy.groupLabel}</div>
+        <div className="mb-2 flex items-baseline justify-between text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          <span>{copy.groupLabel}</span>
+          <span className="normal-case tracking-normal">
+            {total} {total === 1 ? copy.noun : copy.nounPlural}
+          </span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {regions.map((region) => (
             <button
               key={region}
               type="button"
-              onClick={() => setRegion(region)}
+              aria-pressed={isSelected(region)}
+              onClick={() => toggleRegion(region)}
               className={cn(
                 'rounded-full border px-3 py-1.5 text-sm transition-colors',
-                region === store.region ? 'border-foreground bg-foreground text-background' : 'border-border hover:bg-muted',
+                isSelected(region) ? 'border-foreground bg-foreground text-background' : 'border-border hover:bg-muted',
               )}
             >
               {region === 'All' ? copy.wholeSet : region}

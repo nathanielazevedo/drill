@@ -7,6 +7,7 @@ import {
   loadStore,
   saveStore,
   startRun as buildRun,
+  toggleRegion,
 } from './logic';
 import type { DrillTarget, Mode, RunState, Store } from './types';
 
@@ -22,7 +23,7 @@ interface GameState {
 }
 
 type Action =
-  | { type: 'setRegion'; region: string }
+  | { type: 'toggleRegion'; region: string }
   | { type: 'startRun'; mode: Mode }
   | { type: 'resume' }
   | { type: 'pick'; pickedId: string }
@@ -90,13 +91,13 @@ function applyFail(state: GameState, pickedId: string | null): GameState {
   return { ...state, store, activeRun: newRun, phase: 'bad', pickedId };
 }
 
-function reducer(targets: DrillTarget[], state: GameState, action: Action): GameState {
+function reducer(targets: DrillTarget[], regions: readonly string[], state: GameState, action: Action): GameState {
   switch (action.type) {
-    case 'setRegion':
-      return { ...state, store: { ...state.store, region: action.region } };
+    case 'toggleRegion':
+      return { ...state, store: { ...state.store, regions: toggleRegion(state.store.regions, action.region, regions) } };
 
     case 'startRun': {
-      const run = buildRun(targets, state.store, action.mode);
+      const run = buildRun(targets, state.store, action.mode, regions);
       if (!run) return state;
       return {
         ...state,
@@ -161,13 +162,15 @@ export interface DrillConfig {
   targets: DrillTarget[];
   /** the region/type chips shown on the home screen; 'All' means every target. */
   regions: readonly string[];
+  /** move on by itself shortly after a correct answer; off when there's something to read first. Default true. */
+  autoAdvance?: boolean;
 }
 
-export function useDrillGame({ storageKey, targets, regions }: DrillConfig) {
+export function useDrillGame({ storageKey, targets, regions, autoAdvance = true }: DrillConfig) {
   const byId = useMemo<Map<string, DrillTarget>>(() => byIdMap(targets), [targets]);
 
   const [state, dispatch] = useReducer(
-    (s: GameState, a: Action) => reducer(targets, s, a),
+    (s: GameState, a: Action) => reducer(targets, regions, s, a),
     targets,
     (t) => {
       const store = loadStore(storageKey, t, regions);
@@ -177,12 +180,12 @@ export function useDrillGame({ storageKey, targets, regions }: DrillConfig) {
 
   useEffect(() => saveStore(storageKey, state.store), [storageKey, state.store]);
 
-  // A correct answer auto-advances after a beat; a wrong one waits for the player.
+  // A correct answer auto-advances after a beat (if enabled); a wrong one waits for the player.
   useEffect(() => {
-    if (state.phase !== 'ok') return;
+    if (!autoAdvance || state.phase !== 'ok') return;
     const t = setTimeout(() => dispatch({ type: 'advance' }), 900);
     return () => clearTimeout(t);
-  }, [state.phase, state.activeRun]);
+  }, [autoAdvance, state.phase, state.activeRun]);
 
   const targetId = state.activeRun ? state.activeRun.order[state.activeRun.i] : null;
   const target = targetId ? byId.get(targetId) ?? null : null;
@@ -199,7 +202,7 @@ export function useDrillGame({ storageKey, targets, regions }: DrillConfig) {
     targetId,
     choices,
     pickedId: state.pickedId,
-    setRegion: (region: string) => dispatch({ type: 'setRegion', region }),
+    toggleRegion: (region: string) => dispatch({ type: 'toggleRegion', region }),
     startRun: (mode: Mode) => dispatch({ type: 'startRun', mode }),
     resume: () => dispatch({ type: 'resume' }),
     pick: (pickedId: string) => dispatch({ type: 'pick', pickedId }),

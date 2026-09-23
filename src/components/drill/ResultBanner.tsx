@@ -1,12 +1,14 @@
+import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ResultBannerProps {
   kind: 'ok' | 'bad';
   title: string;
   sub?: string;
+  children?: ReactNode;
 }
 
-export function ResultBanner({ kind, title, sub }: ResultBannerProps) {
+export function ResultBanner({ kind, title, sub, children }: ResultBannerProps) {
   return (
     <div
       className={cn(
@@ -16,6 +18,7 @@ export function ResultBanner({ kind, title, sub }: ResultBannerProps) {
     >
       <div className="font-medium">{title}</div>
       {sub && <div className="mt-0.5 text-xs opacity-80">{sub}</div>}
+      {children}
     </div>
   );
 }

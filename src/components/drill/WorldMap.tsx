@@ -35,6 +35,9 @@ interface EngineApi {
   paintPool: (run: RunState | null) => void;
 }
 
+/** targets smaller than this projected area always get the locator ring, whatever the zoom */
+const RING_MAX_AREA = 1000;
+
 function buildSvgInner(world: WorldData): string {
   const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, borders, countries } = world;
   return `
@@ -151,8 +154,10 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
       cx += Math.round((e.view.cx - cx) / W) * W;
       // Targets with no fillable shape of their own (nothing in `pathEls`, e.g. a lake or
       // mountain range) have no other way to show where they are, so the ring always shows.
+      // Anything up to about Zimbabwe's size always gets it too: judging by on-screen size alone,
+      // mid-size countries (Tunisia, Ghana) lost the ring as soon as the map zoomed in on them.
       const hasFill = e.targetId != null && e.pathEls.has(e.targetId);
-      const small = !hasFill || Math.sqrt(t.a) / upp < 24;
+      const small = !hasFill || t.a < RING_MAX_AREA || Math.sqrt(t.a) / upp < 24;
       const r = Math.max((Math.hypot(w, h) / 2) * 1.3, 18 * upp);
       for (const el of [e.ring, e.pulse]) {
         el.setAttribute('cx', String(cx));

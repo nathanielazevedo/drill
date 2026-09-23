@@ -46,6 +46,7 @@ export interface Miss {
 
 export interface RunState {
   mode: Mode;
+  /** the selection key the run was started with ('All', or regions joined by ' + ') */
   region: string;
   order: string[];
   i: number;
@@ -66,6 +67,7 @@ export interface Store {
   v: 1;
   missed: Record<string, MissedEntry>;
   best: Record<string, number>;
-  region: string;
+  /** the regions selected on the home screen; empty means every target */
+  regions: string[];
   run: RunState | null;
 }

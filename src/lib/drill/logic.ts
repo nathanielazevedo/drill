@@ -25,8 +25,22 @@ export function inMasterOrder(order: string[], ids: string[]): string[] {
   return order.filter((id) => want.has(id));
 }
 
-export function regionPool(targets: DrillTarget[], region: string): string[] {
-  return targets.filter((t) => region === 'All' || t.region === region).map((t) => t.id);
+export function regionPool(targets: DrillTarget[], selected: string[]): string[] {
+  return targets.filter((t) => !selected.length || selected.includes(t.region)).map((t) => t.id);
+}
+
+// A selection is keyed by its regions in config order, so "Asia + Africa" and "Africa + Asia"
+// share one best score. Nothing selected (or everything) is 'All'.
+export function regionKey(selected: string[], regions: readonly string[]): string {
+  const picked = regions.filter((r) => r !== 'All' && selected.includes(r));
+  return picked.length && picked.length < regions.filter((r) => r !== 'All').length ? picked.join(' + ') : 'All';
+}
+
+// Toggling a chip: 'All' clears the selection; selecting every region collapses back to 'All'.
+export function toggleRegion(selected: string[], region: string, regions: readonly string[]): string[] {
+  if (region === 'All') return [];
+  const next = selected.includes(region) ? selected.filter((r) => r !== region) : [...selected, region];
+  return regionKey(next, regions) === 'All' ? [] : regions.filter((r) => next.includes(r));
 }
 
 // Multiple choice: the answer plus 7 others, drawn from its own region first so they're plausible,
@@ -47,7 +61,7 @@ export function bestKey(mode: Mode, region: string): string {
 }
 
 export function defaultStore(): Store {
-  return { v: 1, missed: {}, best: {}, region: 'All', run: null };
+  return { v: 1, missed: {}, best: {}, regions: [], run: null };
 }
 
 export function loadStore(storageKey: string, targets: DrillTarget[], regions: readonly string[]): Store {
@@ -56,9 +70,13 @@ export function loadStore(storageKey: string, targets: DrillTarget[], regions: r
     const raw = localStorage.getItem(storageKey);
     const parsed = raw ? JSON.parse(raw) : null;
     if (!parsed || typeof parsed !== 'object') return defaultStore();
-    const out: Store = { ...defaultStore(), ...parsed };
+    const { region: legacyRegion, ...rest } = parsed;
+    const out: Store = { ...defaultStore(), ...rest };
     for (const id of Object.keys(out.missed || {})) if (!byId.has(id)) delete out.missed[id];
-    if (!regions.includes(out.region)) out.region = 'All';
+    // older saves kept a single `region` string
+    const saved: unknown[] = Array.isArray(out.regions) ? out.regions : typeof legacyRegion === 'string' ? [legacyRegion] : [];
+    out.regions = regions.filter((r) => r !== 'All' && saved.includes(r));
+    if (regionKey(out.regions, regions) === 'All') out.regions = [];
     const r = out.run;
     const valid =
       !!r &&
@@ -92,12 +110,17 @@ export function missedIds(store: Store): string[] {
   return Object.keys(store.missed);
 }
 
-export function startRun(targets: DrillTarget[], store: Store, mode: Mode): RunState | null {
-  const ids = mode === 'missed' ? missedIds(store) : regionPool(targets, store.region);
+export function startRun(
+  targets: DrillTarget[],
+  store: Store,
+  mode: Mode,
+  regions: readonly string[],
+): RunState | null {
+  const ids = mode === 'missed' ? missedIds(store) : regionPool(targets, store.regions);
   if (!ids.length) return null;
   return {
     mode,
-    region: mode === 'missed' ? 'All' : store.region,
+    region: mode === 'missed' ? 'All' : regionKey(store.regions, regions),
     order: inMasterOrder(masterOrder(targets), ids),
     i: 0,
     results: {},
