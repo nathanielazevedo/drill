@@ -39,6 +39,9 @@ export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenPro
   const outcome = phase === 'ok' ? 'ok' : phase === 'bad' || phase === 'over' ? 'bad' : null;
   const pickedName = pickedId ? byId.get(pickedId)?.name : undefined;
   const targetGeo = { name: target.name, f: target.f, a: target.a };
+  // With facts showing, the answer card can push the bottom of the screen out of view, so Next
+  // moves up to sit right above it.
+  const nextOnTop = showFacts && !!renderFacts && (phase === 'ok' || phase === 'bad');
 
   const handleSkip = () => {
     if (run.mode === 'strict' && !armed) {
@@ -56,6 +59,12 @@ export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenPro
 
       <WorldMap world={basemap} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />
 
+      {nextOnTop && (
+        <Button type="button" onClick={advance}>
+          Next
+        </Button>
+      )}
+
       {phase === 'bad' && (
         <ResultBanner kind="bad" title={`It's ${target.name}`} sub={missNote(pickedName, 'You skipped this one')}>
           {showFacts && renderFacts?.(target)}
@@ -69,17 +78,19 @@ export function DrillScreen({ basemap, game, copy, renderFacts }: DrillScreenPro
 
       <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
 
-      <div className="flex gap-2">
-        {locked ? (
-          <Button type="button" className="flex-1" onClick={advance}>
-            Next
-          </Button>
-        ) : (
-          <Button type="button" variant="outline" className="flex-1" onClick={handleSkip}>
-            {run.mode === 'strict' ? (armed ? 'Tap again to end run' : 'Give up') : 'Skip'}
-          </Button>
-        )}
-      </div>
+      {!nextOnTop && (
+        <div className="flex gap-2">
+          {locked ? (
+            <Button type="button" className="flex-1" onClick={advance}>
+              Next
+            </Button>
+          ) : (
+            <Button type="button" variant="outline" className="flex-1" onClick={handleSkip}>
+              {run.mode === 'strict' ? (armed ? 'Tap again to end run' : 'Give up') : 'Skip'}
+            </Button>
+          )}
+        </div>
+      )}
 
       <RunOverDialog open={phase === 'over'} run={run} store={store} target={target} pickedName={pickedName} onPlayAgain={() => startRun(run.mode)} onHome={quitToHome} />
       <RunDoneDialog
