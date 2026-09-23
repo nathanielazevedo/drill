@@ -194,7 +194,10 @@ export function useDrillGame({ storageKey, targets, regions, hasFacts = false }:
     return () => clearTimeout(t);
   }, [autoAdvance, state.phase, state.activeRun]);
 
-  const targetId = state.activeRun ? state.activeRun.order[state.activeRun.i] : null;
+  // A finished run's index sits one past the end; keep its last target so the map (and the
+  // end-of-run dialog drawn over it) still has something to show.
+  const run = state.activeRun;
+  const targetId = run ? run.order[Math.min(run.i, run.order.length - 1)] : null;
   const target = targetId ? byId.get(targetId) ?? null : null;
   const choices = useMemo(() => (targetId ? choicesFor(targets, byId, targetId) : []), [targets, byId, targetId]);
 
