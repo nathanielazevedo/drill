@@ -1,12 +1,21 @@
 import { Locate, Globe2 } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import type { Country, RunState, WorldData } from '../lib/types';
+import type { RunState, WorldData } from '@/lib/drill/types';
 import './world-map.css';
+
+export interface TargetGeo {
+  name: string;
+  /** focus frame [x, y, w, h] in the basemap's projection */
+  f: [number, number, number, number];
+  /** projected area, used to decide if the locator ring should show */
+  a: number;
+}
 
 interface WorldMapProps {
   world: WorldData;
   targetId: string | null;
+  targetGeo: TargetGeo | null;
   outcome: 'ok' | 'bad' | null;
   run: RunState | null;
 }
@@ -19,7 +28,7 @@ interface View {
 
 interface EngineApi {
   flyTo: (t: View, ms?: number) => void;
-  targetView: (c: Country) => View;
+  targetView: (f: [number, number, number, number]) => View;
   worldView: () => View;
   setTarget: (id: string | null) => void;
   markOutcome: (kind: 'ok' | 'bad') => void;
@@ -37,13 +46,20 @@ function buildSvgInner(world: WorldData): string {
     <path class="sea-edge" d="M0,${TOP}H${W}M0,${BOT}H${W}"/>`;
 }
 
-export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
+/**
+ * The physical world map: pan/zoom/fly-to, plus a ring+label locator over whatever `targetGeo`
+ * points at. Country paths (from `world`) get highlighted when `targetId` happens to match one —
+ * harmless no-op otherwise, which is how categories with no fillable shape (lakes, mountain
+ * ranges, ...) still get the locator without any per-target geometry of their own.
+ */
+export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<SVGGElement>(null);
+  const geoRef = useRef<TargetGeo | null>(targetGeo);
+  geoRef.current = targetGeo;
 
   const eRef = useRef<{
-    byId: Map<string, Country>;
     pathEls: Map<string, SVGPathElement>;
     ring: SVGCircleElement;
     pulse: SVGCircleElement;
@@ -86,7 +102,6 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
     );
 
     const e = {
-      byId: new Map(world.countries.map((c) => [c.id, c])),
       pathEls,
       ring: overlay.querySelector('.ring') as SVGCircleElement,
       pulse: overlay.querySelector('.pulse') as SVGCircleElement,
@@ -126,7 +141,7 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
     }
 
     function updateOverlay() {
-      const t = e.targetId && e.byId.get(e.targetId);
+      const t = e.targetId && geoRef.current;
       overlay.style.display = t ? '' : 'none';
       if (!t) return;
       const upp = e.view.w / e.pxW;
@@ -134,7 +149,10 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
       const cy = y + h / 2;
       let cx = x + w / 2;
       cx += Math.round((e.view.cx - cx) / W) * W;
-      const small = Math.sqrt(t.a) / upp < 24;
+      // Targets with no fillable shape of their own (nothing in `pathEls`, e.g. a lake or
+      // mountain range) have no other way to show where they are, so the ring always shows.
+      const hasFill = e.targetId != null && e.pathEls.has(e.targetId);
+      const small = !hasFill || Math.sqrt(t.a) / upp < 24;
       const r = Math.max((Math.hypot(w, h) / 2) * 1.3, 18 * upp);
       for (const el of [e.ring, e.pulse]) {
         el.setAttribute('cx', String(cx));
@@ -158,8 +176,8 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
       updateOverlay();
     }
 
-    function targetView(c: Country): View {
-      const [x, y, w, h] = c.f;
+    function targetView(f: [number, number, number, number]): View {
+      const [x, y, w, h] = f;
       const big = Math.min(1, Math.max(w, h * e.aspect) / (W * 0.35));
       const k = 2.6 - 1.3 * big;
       const vw = Math.min(Math.max(w * k, h * k * e.aspect, 130), W * 1.03);
@@ -220,8 +238,7 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
       }
       e.ring.classList.add(kind);
       e.pulse.classList.add(kind, 'still');
-      const c = e.targetId && e.byId.get(e.targetId);
-      e.label.textContent = c ? c.name : '';
+      e.label.textContent = geoRef.current?.name ?? '';
       updateOverlay();
     }
 
@@ -326,16 +343,14 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
     const engine = engineApiRef.current;
     if (!engine) return;
     engine.setTarget(targetId);
-    const c = targetId && eRef.current?.byId.get(targetId);
-    if (c) engine.flyTo(engine.targetView(c));
-  }, [targetId]);
+    if (targetGeo) engine.flyTo(engine.targetView(targetGeo.f));
+  }, [targetId, targetGeo]);
 
   useEffect(() => {
     const engine = engineApiRef.current;
     if (!engine || !outcome) return;
     engine.markOutcome(outcome);
-    const c = targetId && eRef.current?.byId.get(targetId);
-    if (c) engine.flyTo(engine.targetView(c), 500);
+    if (targetGeo) engine.flyTo(engine.targetView(targetGeo.f), 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outcome]);
 
@@ -367,8 +382,7 @@ export function WorldMap({ world, targetId, outcome, run }: WorldMapProps) {
           onMouseDown={(ev) => ev.preventDefault()}
           onClick={() => {
             const engine = engineApiRef.current;
-            const c = targetId && eRef.current?.byId.get(targetId);
-            if (engine && c) engine.flyTo(engine.targetView(c), 600);
+            if (engine && targetGeo) engine.flyTo(engine.targetView(targetGeo.f), 600);
           }}
           aria-label="Recenter on target"
         >

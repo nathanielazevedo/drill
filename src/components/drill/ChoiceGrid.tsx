@@ -1,9 +1,9 @@
 import { cn } from '@/lib/utils';
-import type { Country } from '../lib/types';
+import type { DrillTarget } from '@/lib/drill/types';
 
 interface ChoiceGridProps {
   choices: string[];
-  byId: Map<string, Country>;
+  byId: Map<string, DrillTarget>;
   targetId: string | null;
   pickedId: string | null;
   locked: boolean;

@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { Country, Store } from '../lib/types';
+import { type DrillCopy, pluralize } from '@/lib/drill/copy';
+import type { DrillTarget, Store } from '@/lib/drill/types';
 
 interface MissedDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   store: Store;
-  byId: Map<string, Country>;
+  byId: Map<string, DrillTarget>;
+  copy: DrillCopy;
   onDrill: () => void;
   onClear: () => void;
 }
 
-export function MissedDialog({ open, onOpenChange, store, byId, onDrill, onClear }: MissedDialogProps) {
+export function MissedDialog({ open, onOpenChange, store, byId, copy, onDrill, onClear }: MissedDialogProps) {
   const [armed, setArmed] = useState(false);
   const entries = Object.entries(store.missed).sort((a, b) => b[1].n - a[1].n || b[1].t - a[1].t);
 
@@ -26,18 +28,17 @@ export function MissedDialog({ open, onOpenChange, store, byId, onDrill, onClear
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Missed countries</DialogTitle>
+          <DialogTitle>Missed {copy.nounPlural}</DialogTitle>
         </DialogHeader>
 
         {entries.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            Nothing here yet. Countries you get wrong land on this list so you can drill them later.
+            Nothing here yet. {copy.nounPlural[0].toUpperCase() + copy.nounPlural.slice(1)} you get wrong land on this
+            list so you can drill them later.
           </p>
         ) : (
           <>
-            <p className="text-sm text-muted-foreground">
-              {entries.length} {entries.length === 1 ? 'country' : 'countries'}. Get one right in Missed Only to clear it.
-            </p>
+            <p className="text-sm text-muted-foreground">{pluralize(entries.length, copy)}. Get one right in Missed Only to clear it.</p>
             <ul className="max-h-64 divide-y overflow-y-auto rounded-lg border text-sm">
               {entries.map(([id, m]) => (
                 <li key={id} className="flex items-center justify-between px-3 py-2">

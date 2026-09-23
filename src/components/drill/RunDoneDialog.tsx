@@ -1,19 +1,21 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { Country, RunState } from '../lib/types';
+import { type DrillCopy, pluralize } from '@/lib/drill/copy';
+import type { DrillTarget, RunState } from '@/lib/drill/types';
 
 interface RunDoneDialogProps {
   open: boolean;
   run: RunState;
-  byId: Map<string, Country>;
+  byId: Map<string, DrillTarget>;
   missedCount: number;
+  copy: DrillCopy;
   onDrillMissed: () => void;
   onPlayAgain: () => void;
   onHome: () => void;
 }
 
-export function RunDoneDialog({ open, run, byId, missedCount, onDrillMissed, onPlayAgain, onHome }: RunDoneDialogProps) {
+export function RunDoneDialog({ open, run, byId, missedCount, copy, onDrillMissed, onPlayAgain, onHome }: RunDoneDialogProps) {
   const total = run.order.length;
   const pct = Math.round((run.correct / total) * 100);
   const title =
@@ -47,7 +49,7 @@ export function RunDoneDialog({ open, run, byId, missedCount, onDrillMissed, onP
 
         {run.mode === 'missed' && (
           <p className="text-center text-sm text-muted-foreground">
-            {missedCount ? `${missedCount} ${missedCount === 1 ? 'country' : 'countries'} still on your missed list.` : 'Your missed list is empty. Nicely done.'}
+            {missedCount ? `${pluralize(missedCount, copy)} still on your missed list.` : 'Your missed list is empty. Nicely done.'}
           </p>
         )}
 

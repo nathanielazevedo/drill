@@ -10,6 +10,7 @@ export interface Country {
   a: number;
 }
 
+/** The shared physical world basemap: ocean, land silhouettes, borders, graticule. */
 export interface WorldData {
   w: number;
   top: number;
@@ -19,6 +20,21 @@ export interface WorldData {
   context: string;
   borders: string;
   countries: Country[];
+}
+
+/**
+ * One quizzable thing on the map — a country, a lake, a mountain range... Categories build
+ * these from their own data; the drill engine and map only ever see this shape.
+ */
+export interface DrillTarget {
+  id: string;
+  name: string;
+  /** the filterable grouping shown as chips on the home screen (a continent, a feature type, ...) */
+  region: string;
+  /** focus frame [x, y, w, h] in the shared basemap's projection */
+  f: [number, number, number, number];
+  /** projected area, used to decide if a target needs a locator ring */
+  a: number;
 }
 
 export type Mode = 'strict' | 'free' | 'missed';

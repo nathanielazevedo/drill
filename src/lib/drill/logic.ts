@@ -1,7 +1,5 @@
 import { hashStr, seededRand, shuffled } from './rng';
-import type { Country, Mode, RunState, Store, WorldData } from './types';
-
-export const REGIONS = ['All', 'Africa', 'Asia', 'Europe', 'North America', 'South America', 'Oceania'] as const;
+import type { DrillTarget, Mode, RunState, Store } from './types';
 
 export const MODES: Record<Mode, { name: string }> = {
   strict: { name: 'Sudden Death' },
@@ -11,16 +9,14 @@ export const MODES: Record<Mode, { name: string }> = {
 
 export const CHOICES = 8;
 
-const STORAGE_KEY = 'shit-you-should-know.countries.v1';
-
-export function byIdMap(world: WorldData): Map<string, Country> {
-  return new Map(world.countries.map((c) => [c.id, c]));
+export function byIdMap(targets: DrillTarget[]): Map<string, DrillTarget> {
+  return new Map(targets.map((t) => [t.id, t]));
 }
 
-// Every run uses the same order: one fixed shuffle of all countries. A region or the missed
-// list is just that order with the other countries filtered out, so runs stay repeatable.
-export function masterOrder(world: WorldData): string[] {
-  const ids = world.countries.map((c) => c.id).sort();
+// Every run uses the same order: one fixed shuffle of every target. A region or the missed
+// list is just that order with the other targets filtered out, so runs stay repeatable.
+export function masterOrder(targets: DrillTarget[]): string[] {
+  const ids = targets.map((t) => t.id).sort();
   return shuffled(ids, seededRand(0x9e3779b9));
 }
 
@@ -29,18 +25,18 @@ export function inMasterOrder(order: string[], ids: string[]): string[] {
   return order.filter((id) => want.has(id));
 }
 
-export function regionPool(world: WorldData, region: string): string[] {
-  return world.countries.filter((c) => region === 'All' || c.region === region).map((c) => c.id);
+export function regionPool(targets: DrillTarget[], region: string): string[] {
+  return targets.filter((t) => region === 'All' || t.region === region).map((t) => t.id);
 }
 
 // Multiple choice: the answer plus 7 others, drawn from its own region first so they're plausible,
-// then listed A–Z. Seeded by country, so a country always gets the same options.
-export function choicesFor(world: WorldData, byId: Map<string, Country>, id: string): string[] {
-  const country = byId.get(id)!;
+// then listed A–Z. Seeded by target, so a given question always gets the same options.
+export function choicesFor(targets: DrillTarget[], byId: Map<string, DrillTarget>, id: string): string[] {
+  const target = byId.get(id)!;
   const rand = seededRand(hashStr(id));
-  const others = world.countries.filter((c) => c.id !== id);
-  const near = shuffled(others.filter((c) => c.region === country.region).map((c) => c.id), rand);
-  const far = shuffled(others.filter((c) => c.region !== country.region).map((c) => c.id), rand);
+  const others = targets.filter((t) => t.id !== id);
+  const near = shuffled(others.filter((t) => t.region === target.region).map((t) => t.id), rand);
+  const far = shuffled(others.filter((t) => t.region !== target.region).map((t) => t.id), rand);
   return [id, ...near.concat(far).slice(0, CHOICES - 1)].sort((a, b) =>
     byId.get(a)!.name.localeCompare(byId.get(b)!.name),
   );
@@ -54,15 +50,15 @@ export function defaultStore(): Store {
   return { v: 1, missed: {}, best: {}, region: 'All', run: null };
 }
 
-export function loadStore(world: WorldData): Store {
-  const byId = byIdMap(world);
+export function loadStore(storageKey: string, targets: DrillTarget[], regions: readonly string[]): Store {
+  const byId = byIdMap(targets);
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey);
     const parsed = raw ? JSON.parse(raw) : null;
     if (!parsed || typeof parsed !== 'object') return defaultStore();
     const out: Store = { ...defaultStore(), ...parsed };
     for (const id of Object.keys(out.missed || {})) if (!byId.has(id)) delete out.missed[id];
-    if (!(REGIONS as readonly string[]).includes(out.region)) out.region = 'All';
+    if (!regions.includes(out.region)) out.region = 'All';
     const r = out.run;
     const valid =
       !!r &&
@@ -84,9 +80,9 @@ export function loadStore(world: WorldData): Store {
   }
 }
 
-export function saveStore(store: Store): void {
+export function saveStore(storageKey: string, store: Store): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    localStorage.setItem(storageKey, JSON.stringify(store));
   } catch {
     // storage full or blocked: keep playing, just don't persist
   }
@@ -96,13 +92,13 @@ export function missedIds(store: Store): string[] {
   return Object.keys(store.missed);
 }
 
-export function startRun(world: WorldData, store: Store, mode: Mode): RunState | null {
-  const ids = mode === 'missed' ? missedIds(store) : regionPool(world, store.region);
+export function startRun(targets: DrillTarget[], store: Store, mode: Mode): RunState | null {
+  const ids = mode === 'missed' ? missedIds(store) : regionPool(targets, store.region);
   if (!ids.length) return null;
   return {
     mode,
     region: mode === 'missed' ? 'All' : store.region,
-    order: inMasterOrder(masterOrder(world), ids),
+    order: inMasterOrder(masterOrder(targets), ids),
     i: 0,
     results: {},
     correct: 0,

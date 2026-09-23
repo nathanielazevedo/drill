@@ -16,4 +16,10 @@ export const CATEGORIES: CategoryDef[] = [
     description: 'Name every country on the map.',
     Component: lazy(() => import('./countries/CountriesCategory').then((m) => ({ default: m.CountriesCategory }))),
   },
+  {
+    id: 'terrain',
+    name: 'Terrain',
+    description: 'Oceans, lakes, mountain ranges, and deserts.',
+    Component: lazy(() => import('./terrain/TerrainCategory').then((m) => ({ default: m.TerrainCategory }))),
+  },
 ];

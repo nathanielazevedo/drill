@@ -8,7 +8,7 @@ import {
   saveStore,
   startRun as buildRun,
 } from './logic';
-import type { Country, Mode, RunState, Store, WorldData } from './types';
+import type { DrillTarget, Mode, RunState, Store } from './types';
 
 export type Phase = 'asking' | 'ok' | 'bad' | 'over' | 'done';
 export type Screen = 'home' | 'game';
@@ -90,13 +90,13 @@ function applyFail(state: GameState, pickedId: string | null): GameState {
   return { ...state, store, activeRun: newRun, phase: 'bad', pickedId };
 }
 
-function reducer(world: WorldData, state: GameState, action: Action): GameState {
+function reducer(targets: DrillTarget[], state: GameState, action: Action): GameState {
   switch (action.type) {
     case 'setRegion':
       return { ...state, store: { ...state.store, region: action.region } };
 
     case 'startRun': {
-      const run = buildRun(world, state.store, action.mode);
+      const run = buildRun(targets, state.store, action.mode);
       if (!run) return state;
       return {
         ...state,
@@ -154,19 +154,28 @@ function reducer(world: WorldData, state: GameState, action: Action): GameState 
   }
 }
 
-export function useCountriesGame(world: WorldData) {
-  const byId = useMemo<Map<string, Country>>(() => byIdMap(world), [world]);
+export interface DrillConfig {
+  /** localStorage key this category's progress is saved under. */
+  storageKey: string;
+  /** every quizzable target (a country, a lake, ...). */
+  targets: DrillTarget[];
+  /** the region/type chips shown on the home screen; 'All' means every target. */
+  regions: readonly string[];
+}
+
+export function useDrillGame({ storageKey, targets, regions }: DrillConfig) {
+  const byId = useMemo<Map<string, DrillTarget>>(() => byIdMap(targets), [targets]);
 
   const [state, dispatch] = useReducer(
-    (s: GameState, a: Action) => reducer(world, s, a),
-    world,
-    (w) => {
-      const store = loadStore(w);
+    (s: GameState, a: Action) => reducer(targets, s, a),
+    targets,
+    (t) => {
+      const store = loadStore(storageKey, t, regions);
       return { store, activeRun: store.run, screen: 'home' as Screen, phase: 'asking' as Phase, pickedId: null };
     },
   );
 
-  useEffect(() => saveStore(state.store), [state.store]);
+  useEffect(() => saveStore(storageKey, state.store), [storageKey, state.store]);
 
   // A correct answer auto-advances after a beat; a wrong one waits for the player.
   useEffect(() => {
@@ -177,11 +186,12 @@ export function useCountriesGame(world: WorldData) {
 
   const targetId = state.activeRun ? state.activeRun.order[state.activeRun.i] : null;
   const target = targetId ? byId.get(targetId) ?? null : null;
-  const choices = useMemo(() => (targetId ? choicesFor(world, byId, targetId) : []), [world, byId, targetId]);
+  const choices = useMemo(() => (targetId ? choicesFor(targets, byId, targetId) : []), [targets, byId, targetId]);
 
   return {
     store: state.store,
     byId,
+    regions,
     screen: state.screen,
     phase: state.phase,
     run: state.activeRun,
@@ -200,3 +210,5 @@ export function useCountriesGame(world: WorldData) {
     resetAll: () => dispatch({ type: 'resetAll' }),
   };
 }
+
+export type DrillGame = ReturnType<typeof useDrillGame>;

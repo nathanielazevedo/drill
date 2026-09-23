@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { bestKey } from '../lib/logic';
-import type { Country, RunState, Store } from '../lib/types';
+import { bestKey } from '@/lib/drill/logic';
+import type { DrillTarget, RunState, Store } from '@/lib/drill/types';
 
 interface RunOverDialogProps {
   open: boolean;
   run: RunState;
   store: Store;
-  target: Country;
+  target: DrillTarget;
   pickedName?: string;
   onPlayAgain: () => void;
   onHome: () => void;

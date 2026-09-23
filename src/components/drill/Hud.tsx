@@ -1,22 +1,24 @@
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { MODES, bestKey } from '../lib/logic';
-import type { Phase } from '../lib/useGame';
-import type { RunState, Store } from '../lib/types';
+import type { DrillCopy } from '@/lib/drill/copy';
+import { MODES, bestKey } from '@/lib/drill/logic';
+import type { RunState, Store } from '@/lib/drill/types';
+import type { Phase } from '@/lib/drill/useGame';
 
 interface HudProps {
   run: RunState;
   store: Store;
   phase: Phase;
+  copy: DrillCopy;
   onQuit: () => void;
 }
 
-export function Hud({ run, store, phase, onQuit }: HudProps) {
+export function Hud({ run, store, phase, copy, onQuit }: HudProps) {
   const total = run.order.length;
   const settled = phase === 'ok' || phase === 'bad' || phase === 'over';
   const shown = Math.min(run.i + (settled ? 1 : 0), total);
-  const where = run.mode === 'missed' ? 'Missed countries' : run.region === 'All' ? 'World' : run.region;
+  const where = run.mode === 'missed' ? `Missed ${copy.nounPlural}` : run.region === 'All' ? copy.wholeSet : run.region;
   const best = store.best[bestKey('strict', run.region)] || 0;
 
   return (

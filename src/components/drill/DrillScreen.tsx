@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import type { WorldData } from '../lib/types';
-import type { useCountriesGame } from '../lib/useGame';
+import type { DrillCopy } from '@/lib/drill/copy';
+import type { WorldData } from '@/lib/drill/types';
+import type { DrillGame } from '@/lib/drill/useGame';
 import { ChoiceGrid } from './ChoiceGrid';
 import { Hud } from './Hud';
 import { ResultBanner } from './ResultBanner';
@@ -9,16 +10,17 @@ import { RunDoneDialog } from './RunDoneDialog';
 import { RunOverDialog } from './RunOverDialog';
 import { WorldMap } from './WorldMap';
 
-interface DrillGameProps {
-  world: WorldData;
-  game: ReturnType<typeof useCountriesGame>;
+interface DrillScreenProps {
+  basemap: WorldData;
+  game: DrillGame;
+  copy: DrillCopy;
 }
 
 function missNote(pickedName: string | undefined, none: string): string {
   return pickedName ? `You picked ${pickedName}` : none;
 }
 
-export function DrillGame({ world, game }: DrillGameProps) {
+export function DrillScreen({ basemap, game, copy }: DrillScreenProps) {
   const { store, byId, phase, run, target, targetId, choices, pickedId, pick, skip, advance, quitToHome, startRun } = game;
   const [armed, setArmed] = useState(false);
   const armTimer = useRef<number>(undefined);
@@ -34,6 +36,7 @@ export function DrillGame({ world, game }: DrillGameProps) {
   const locked = phase !== 'asking';
   const outcome = phase === 'ok' ? 'ok' : phase === 'bad' || phase === 'over' ? 'bad' : null;
   const pickedName = pickedId ? byId.get(pickedId)?.name : undefined;
+  const targetGeo = { name: target.name, f: target.f, a: target.a };
 
   const handleSkip = () => {
     if (run.mode === 'strict' && !armed) {
@@ -47,9 +50,9 @@ export function DrillGame({ world, game }: DrillGameProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Hud run={run} store={store} phase={phase} onQuit={quitToHome} />
+      <Hud run={run} store={store} phase={phase} copy={copy} onQuit={quitToHome} />
 
-      <WorldMap world={world} targetId={targetId} outcome={outcome} run={run} />
+      <WorldMap world={basemap} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />
 
       {phase === 'bad' && (
         <ResultBanner kind="bad" title={`It's ${target.name}`} sub={missNote(pickedName, 'You skipped this one')} />
@@ -71,7 +74,16 @@ export function DrillGame({ world, game }: DrillGameProps) {
       </div>
 
       <RunOverDialog open={phase === 'over'} run={run} store={store} target={target} pickedName={pickedName} onPlayAgain={() => startRun(run.mode)} onHome={quitToHome} />
-      <RunDoneDialog open={phase === 'done'} run={run} byId={byId} missedCount={Object.keys(store.missed).length} onDrillMissed={() => startRun('missed')} onPlayAgain={() => startRun(run.mode === 'missed' ? 'free' : run.mode)} onHome={quitToHome} />
+      <RunDoneDialog
+        open={phase === 'done'}
+        run={run}
+        byId={byId}
+        missedCount={Object.keys(store.missed).length}
+        copy={copy}
+        onDrillMissed={() => startRun('missed')}
+        onPlayAgain={() => startRun(run.mode === 'missed' ? 'free' : run.mode)}
+        onHome={quitToHome}
+      />
     </div>
   );
 }

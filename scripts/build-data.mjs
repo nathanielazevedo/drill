@@ -124,7 +124,7 @@ const graticule = path(geoGraticule().step([30, 30]).extent([[-180, LAT_BOT], [1
 
 const out = { w: W, top: yTop, bottom: yBot, ocean, graticule, context, borders, countries };
 const json = JSON.stringify(out);
-writeFileSync(new URL('../src/categories/countries/data/world.json', import.meta.url), json);
+writeFileSync(new URL('../src/data/world.json', import.meta.url), json);
 
 const kb = (s) => `${(s.length / 1024).toFixed(0)} KB`;
 console.log(`world.json ${kb(json)} — ${countries.length} countries, context ${kb(context)}, borders ${kb(borders)}, world ${W}×${round(yBot - yTop)}`);

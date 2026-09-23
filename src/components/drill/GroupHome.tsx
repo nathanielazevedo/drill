@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import type { DrillCopy } from '@/lib/drill/copy';
+import { MODES, bestKey } from '@/lib/drill/logic';
+import type { Mode } from '@/lib/drill/types';
+import type { DrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
-import { MODES, REGIONS, bestKey, regionPool } from '../lib/logic';
-import type { Mode, WorldData } from '../lib/types';
-import type { useCountriesGame } from '../lib/useGame';
 import { MissedDialog } from './MissedDialog';
 
-interface CountryHomeProps {
-  world: WorldData;
-  game: ReturnType<typeof useCountriesGame>;
+interface GroupHomeProps {
+  game: DrillGame;
+  copy: DrillCopy;
+  modeDescription: Record<Mode, string>;
 }
 
-export function CountryHome({ world, game }: CountryHomeProps) {
-  const { store, byId, setRegion, startRun, resume, clearMissed, resetAll } = game;
+export function GroupHome({ game, copy, modeDescription }: GroupHomeProps) {
+  const { store, byId, regions, setRegion, startRun, resume, clearMissed, resetAll } = game;
   const [missedOpen, setMissedOpen] = useState(false);
   const [resetArmed, setResetArmed] = useState(false);
 
+  const targets = [...byId.values()];
+  const countIn = (region: string) => targets.filter((t) => region === 'All' || t.region === region).length;
+
   const missedCount = Object.keys(store.missed).length;
-  const total = regionPool(world, store.region).length;
+  const total = countIn(store.region);
   const bestStrict = store.best[bestKey('strict', store.region)];
   const bestFree = store.best[bestKey('free', store.region)];
 
@@ -26,12 +31,6 @@ export function CountryHome({ world, game }: CountryHomeProps) {
     strict: bestStrict ? `Best ${bestStrict}/${total}` : null,
     free: bestFree != null ? `Best ${bestFree}%` : null,
     missed: missedCount ? `${missedCount} to drill` : null,
-  };
-
-  const modeDescription: Record<Mode, string> = {
-    strict: 'One miss ends the run. Tracks your best streak.',
-    free: 'Misses show the answer and you carry on. Tracks your best score.',
-    missed: 'Drills just the countries you have gotten wrong.',
   };
 
   return (
@@ -42,7 +41,8 @@ export function CountryHome({ world, game }: CountryHomeProps) {
             <div>
               <div className="text-sm font-medium">Continue {MODES[store.run.mode].name}</div>
               <div className="text-xs text-muted-foreground">
-                {store.run.i} of {store.run.order.length} · {store.run.mode === 'missed' ? 'missed countries' : store.run.region === 'All' ? 'the world' : store.run.region}
+                {store.run.i} of {store.run.order.length} ·{' '}
+                {store.run.mode === 'missed' ? `missed ${copy.nounPlural}` : store.run.region === 'All' ? copy.wholeSet : store.run.region}
               </div>
             </div>
             <Button type="button" size="sm" onClick={resume}>
@@ -53,9 +53,9 @@ export function CountryHome({ world, game }: CountryHomeProps) {
       )}
 
       <div>
-        <div className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">Region</div>
+        <div className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">{copy.groupLabel}</div>
         <div className="flex flex-wrap gap-2">
-          {REGIONS.map((region) => (
+          {regions.map((region) => (
             <button
               key={region}
               type="button"
@@ -65,8 +65,8 @@ export function CountryHome({ world, game }: CountryHomeProps) {
                 region === store.region ? 'border-foreground bg-foreground text-background' : 'border-border hover:bg-muted',
               )}
             >
-              {region === 'All' ? 'World' : region}
-              <span className="ml-1.5 text-xs opacity-60">{regionPool(world, region).length}</span>
+              {region === 'All' ? copy.wholeSet : region}
+              <span className="ml-1.5 text-xs opacity-60">{countIn(region)}</span>
             </button>
           ))}
         </div>
@@ -118,6 +118,7 @@ export function CountryHome({ world, game }: CountryHomeProps) {
         onOpenChange={setMissedOpen}
         store={store}
         byId={byId}
+        copy={copy}
         onDrill={() => {
           setMissedOpen(false);
           startRun('missed');
