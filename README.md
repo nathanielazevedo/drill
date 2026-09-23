@@ -5,7 +5,7 @@ accounts — everything lives in `localStorage` on your device.
 
 ## Categories
 
-Both play on the same interactive world map (pan/zoom, fly-to, multiple choice) via a shared
+The map categories play on the same interactive world map (pan/zoom, fly-to, multiple choice) via a shared
 drill engine at `src/lib/drill/` and `src/components/drill/`.
 
 - **Countries** — name every country. Sudden Death, Free Play, and Missed Only modes; pick a
@@ -13,6 +13,10 @@ drill engine at `src/lib/drill/` and `src/components/drill/`.
 - **Terrain** — oceans, lakes, mountain ranges, and deserts. Same modes, filtered by type instead
   of region. These don't have official boundaries, so the map shows a locator ring over the right
   area rather than a precise outline.
+- **Chinese Provinces** — the 31 mainland provincial-level divisions plus Hong Kong and Macau,
+  grouped into China's six traditional regions. Its own basemap, with Chinese names, pinyin and
+  pronunciation in the facts.
+- **US Presidents** — all 45 in order, from their portraits (no map).
 
 ## Run it
 
@@ -37,3 +41,6 @@ screen for anyone who hasn't opened it).
   Countries quiz set in `scripts/countries.mjs` with `npm run build:data`.
 - `src/categories/terrain/data/features.json` — Terrain's hand-authored bounding boxes. Edit
   `scripts/terrain-features.mjs` and regenerate with `npm run build:terrain-data`.
+- `src/categories/china/data/china.json` — the China basemap: Natural Earth 50m admin-1 provinces
+  (downloaded by the script) on the same projection as the world map. Edit
+  `scripts/china-provinces.mjs` and regenerate with `npm run build:china-data`.

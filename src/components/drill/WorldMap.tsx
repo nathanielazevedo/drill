@@ -123,11 +123,13 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
     };
     eRef.current = e;
 
-    const worldView = (): View => ({
-      cx: W / 2,
-      cy: (TOP + BOT) / 2,
-      w: Math.max(W * 1.03, (BOT - TOP) * 1.03 * e.aspect),
-    });
+    const worldView = (): View => {
+      if (world.home) {
+        const [x, y, w, h] = world.home;
+        return fitY({ cx: x + w / 2, cy: y + h / 2, w: Math.max(w, h * e.aspect) });
+      }
+      return { cx: W / 2, cy: (TOP + BOT) / 2, w: Math.max(W * 1.03, (BOT - TOP) * 1.03 * e.aspect) };
+    };
     const wrapX = () => {
       e.view.cx = ((e.view.cx % W) + W) % W;
     };
@@ -252,7 +254,8 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
       const pool = new Set(runState ? runState.order : []);
       for (const [id, el] of e.pathEls) {
         const r = runState?.results[id];
-        el.setAttribute('class', 'c' + (pool.has(id) ? '' : ' out') + (r ? ' ' + r : ''));
+        // keep the current target's highlight: this runs after setTarget whenever the run moves on
+        el.setAttribute('class', 'c' + (pool.has(id) ? '' : ' out') + (r ? ' ' + r : '') + (id === e.targetId ? ' target' : ''));
       }
     }
 
@@ -403,7 +406,7 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
           onClick={() => {
             engineApiRef.current?.flyTo(engineApiRef.current.worldView(), 600);
           }}
-          aria-label="Zoom to world"
+          aria-label="Zoom out"
         >
           <Globe2 />
         </Button>

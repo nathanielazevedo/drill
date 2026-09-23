@@ -23,6 +23,12 @@ export const CATEGORIES: CategoryDef[] = [
     Component: lazy(() => import('./terrain/TerrainCategory').then((m) => ({ default: m.TerrainCategory }))),
   },
   {
+    id: 'china',
+    name: 'Chinese Provinces',
+    description: 'All 33, from Xinjiang to Macau.',
+    Component: lazy(() => import('./china/ChinaCategory').then((m) => ({ default: m.ChinaCategory }))),
+  },
+  {
     id: 'presidents',
     name: 'US Presidents',
     description: 'All 45, in order, from their portraits.',

@@ -10,11 +10,13 @@ export interface Country {
   a: number;
 }
 
-/** The shared physical world basemap: ocean, land silhouettes, borders, graticule. */
+/** A physical world basemap: ocean, land silhouettes, borders, graticule. `countries` are the fillable quiz shapes. */
 export interface WorldData {
   w: number;
   top: number;
   bottom: number;
+  /** frame [x, y, w, h] that "zoom out" returns to; the whole world when absent */
+  home?: [number, number, number, number];
   ocean: string;
   graticule: string;
   context: string;
