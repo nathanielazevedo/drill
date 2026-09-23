@@ -13,6 +13,8 @@ drill engine at `src/lib/drill/` and `src/components/drill/`.
 - **Terrain** — oceans, lakes, mountain ranges, and deserts. Same modes, filtered by type instead
   of region. These don't have official boundaries, so the map shows a locator ring over the right
   area rather than a precise outline.
+- **US States** — all 50, filtered by Census region, with capital, largest city, statehood and
+  nickname in the facts. DC is on the map but not quizzed.
 - **Chinese Provinces** — the 31 mainland provincial-level divisions plus Hong Kong and Macau,
   grouped into China's six traditional regions. Its own basemap, with Chinese names, pinyin and
   pronunciation in the facts.
@@ -41,6 +43,8 @@ screen for anyone who hasn't opened it).
   Countries quiz set in `scripts/countries.mjs` with `npm run build:data`.
 - `src/categories/terrain/data/features.json` — Terrain's hand-authored bounding boxes. Edit
   `scripts/terrain-features.mjs` and regenerate with `npm run build:terrain-data`.
-- `src/categories/china/data/china.json` — the China basemap: Natural Earth 50m admin-1 provinces
-  (downloaded by the script) on the same projection as the world map. Edit
-  `scripts/china-provinces.mjs` and regenerate with `npm run build:china-data`.
+- `src/categories/china/data/china.json` and `src/categories/us-states/data/us.json` — the China and
+  US basemaps: Natural Earth 50m admin-1 provinces/states (downloaded by
+  `scripts/build-admin1-data.mjs`) on the same projection as the world map. Edit
+  `scripts/china-provinces.mjs` or `scripts/us-states.mjs` and regenerate with
+  `npm run build:china-data` / `npm run build:us-data`.

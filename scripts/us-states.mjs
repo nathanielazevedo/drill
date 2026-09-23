@@ -1,0 +1,61 @@
+// The quiz set: the 50 states, grouped by Census region. DC is drawn as grey context.
+// [display name, Natural Earth admin-1 name, region, accepted alternate answers]
+export const STATES = [
+  // ── Northeast ──
+  ['Connecticut', 'Connecticut', 'Northeast'],
+  ['Maine', 'Maine', 'Northeast'],
+  ['Massachusetts', 'Massachusetts', 'Northeast'],
+  ['New Hampshire', 'New Hampshire', 'Northeast'],
+  ['New Jersey', 'New Jersey', 'Northeast'],
+  ['New York', 'New York', 'Northeast'],
+  ['Pennsylvania', 'Pennsylvania', 'Northeast'],
+  ['Rhode Island', 'Rhode Island', 'Northeast'],
+  ['Vermont', 'Vermont', 'Northeast'],
+
+  // ── Midwest ──
+  ['Illinois', 'Illinois', 'Midwest'],
+  ['Indiana', 'Indiana', 'Midwest'],
+  ['Iowa', 'Iowa', 'Midwest'],
+  ['Kansas', 'Kansas', 'Midwest'],
+  ['Michigan', 'Michigan', 'Midwest'],
+  ['Minnesota', 'Minnesota', 'Midwest'],
+  ['Missouri', 'Missouri', 'Midwest'],
+  ['Nebraska', 'Nebraska', 'Midwest'],
+  ['North Dakota', 'North Dakota', 'Midwest'],
+  ['Ohio', 'Ohio', 'Midwest'],
+  ['South Dakota', 'South Dakota', 'Midwest'],
+  ['Wisconsin', 'Wisconsin', 'Midwest'],
+
+  // ── South ──
+  ['Alabama', 'Alabama', 'South'],
+  ['Arkansas', 'Arkansas', 'South'],
+  ['Delaware', 'Delaware', 'South'],
+  ['Florida', 'Florida', 'South'],
+  ['Georgia', 'Georgia', 'South'],
+  ['Kentucky', 'Kentucky', 'South'],
+  ['Louisiana', 'Louisiana', 'South'],
+  ['Maryland', 'Maryland', 'South'],
+  ['Mississippi', 'Mississippi', 'South'],
+  ['North Carolina', 'North Carolina', 'South'],
+  ['Oklahoma', 'Oklahoma', 'South'],
+  ['South Carolina', 'South Carolina', 'South'],
+  ['Tennessee', 'Tennessee', 'South'],
+  ['Texas', 'Texas', 'South'],
+  ['Virginia', 'Virginia', 'South'],
+  ['West Virginia', 'West Virginia', 'South'],
+
+  // ── West ──
+  ['Alaska', 'Alaska', 'West'],
+  ['Arizona', 'Arizona', 'West'],
+  ['California', 'California', 'West'],
+  ['Colorado', 'Colorado', 'West'],
+  ['Hawaii', 'Hawaii', 'West'],
+  ['Idaho', 'Idaho', 'West'],
+  ['Montana', 'Montana', 'West'],
+  ['Nevada', 'Nevada', 'West'],
+  ['New Mexico', 'New Mexico', 'West'],
+  ['Oregon', 'Oregon', 'West'],
+  ['Utah', 'Utah', 'West'],
+  ['Washington', 'Washington', 'West'],
+  ['Wyoming', 'Wyoming', 'West'],
+];

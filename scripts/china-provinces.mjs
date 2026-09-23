@@ -1,6 +1,6 @@
 // The quiz set: China's 31 mainland provincial-level divisions plus Hong Kong and Macau.
 // Taiwan is left out here (it's in the Countries quiz) and drawn as grey context.
-// [display name, Natural Earth admin-1 name (null: the world-atlas country of the same name), region, accepted alternate answers]
+// [display name, Natural Earth admin-1 name, or { country } for a world-atlas country, region, accepted alternate answers]
 export const PROVINCES = [
   // ── North ──
   ['Beijing', 'Beijing', 'North', ['Peking']],
@@ -30,8 +30,8 @@ export const PROVINCES = [
   ['Guangdong', 'Guangdong', 'Central & South', ['Canton']],
   ['Guangxi', 'Guangxi', 'Central & South'],
   ['Hainan', 'Hainan', 'Central & South'],
-  ['Hong Kong', null, 'Central & South'],
-  ['Macau', null, 'Central & South', ['Macao']],
+  ['Hong Kong', { country: 'Hong Kong' }, 'Central & South'],
+  ['Macau', { country: 'Macao' }, 'Central & South', ['Macao']],
 
   // ── Southwest ──
   ['Chongqing', 'Chongqing', 'Southwest', ['Chungking']],

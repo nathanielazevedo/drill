@@ -23,6 +23,12 @@ export const CATEGORIES: CategoryDef[] = [
     Component: lazy(() => import('./terrain/TerrainCategory').then((m) => ({ default: m.TerrainCategory }))),
   },
   {
+    id: 'us-states',
+    name: 'US States',
+    description: 'All 50, from Maine to Hawaii.',
+    Component: lazy(() => import('./us-states/UsStatesCategory').then((m) => ({ default: m.UsStatesCategory }))),
+  },
+  {
     id: 'china',
     name: 'Chinese Provinces',
     description: 'All 33, from Xinjiang to Macau.',

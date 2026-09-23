@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "build:data": "node scripts/build-data.mjs",
     "build:terrain-data": "node scripts/build-terrain-data.mjs",
-    "build:china-data": "node scripts/build-china-data.mjs",
+    "build:china-data": "node scripts/build-admin1-data.mjs china",
+    "build:us-data": "node scripts/build-admin1-data.mjs us",
     "fetch:portraits": "node scripts/fetch-president-portraits.mjs"
   },
   "dependencies": {
