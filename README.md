@@ -19,6 +19,8 @@ one miss ends the run, and your best streak is kept per region.
   grouped into China's six traditional regions. Its own basemap, with Chinese names, pinyin and
   pronunciation in the facts.
 - **US Presidents** — all 45 in order, from their portraits (no map).
+- **Mandarin** — 100 of the most common words, shown in pinyin only (no characters); pick the
+  English meaning. Grouped by word type, with an example sentence in the facts.
 
 ## Run it
 

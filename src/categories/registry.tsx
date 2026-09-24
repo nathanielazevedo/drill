@@ -47,4 +47,11 @@ export const CATEGORIES: CategoryDef[] = [
     size: 45,
     Component: lazy(() => import('./presidents/PresidentsCategory').then((m) => ({ default: m.PresidentsCategory }))),
   },
+  {
+    id: 'mandarin',
+    name: 'Mandarin',
+    description: 'The 100 most common words, in pinyin.',
+    size: 100,
+    Component: lazy(() => import('./mandarin/MandarinCategory').then((m) => ({ default: m.MandarinCategory }))),
+  },
 ];
