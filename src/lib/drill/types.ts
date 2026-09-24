@@ -20,6 +20,8 @@ export interface WorldData {
   ocean: string;
   graticule: string;
   context: string;
+  /** lakes drawn in water color over `context`, where its countries count them as land */
+  lakes?: string;
   borders: string;
   countries: Country[];
 }

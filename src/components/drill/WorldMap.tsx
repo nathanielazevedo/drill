@@ -43,11 +43,12 @@ function ringRadius([, , w, h]: [number, number, number, number]): number {
 }
 
 function buildSvgInner(world: WorldData): string {
-  const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, borders, countries } = world;
+  const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, lakes, borders, countries } = world;
   return `
     <path class="sea" d="${ocean}"/>
     <path class="grat" d="${graticule}"/>
     <path class="ctx" d="${context}"/>
+    ${lakes ? `<path class="lake" d="${lakes}"/>` : ''}
     <g id="land">${countries.map((c) => `<path class="c" data-id="${c.id}" d="${c.d}"/>`).join('')}</g>
     <path class="borders" d="${borders}"/>
     <path class="sea-edge" d="M0,${TOP}H${W}M0,${BOT}H${W}"/>`;

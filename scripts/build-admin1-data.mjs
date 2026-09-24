@@ -3,7 +3,7 @@
 // everything outside the country is grey context.
 // Run: npm run build:china-data / npm run build:us-data (downloads the ~2MB Natural Earth file each time)
 import { readFileSync, writeFileSync } from 'node:fs';
-import { geoMercator, geoPath, geoGraticule } from 'd3-geo';
+import { geoBounds, geoMercator, geoPath, geoGraticule } from 'd3-geo';
 import { feature, mesh } from 'topojson-client';
 import { PROVINCES } from './china-provinces.mjs';
 import { STATES } from './us-states.mjs';
@@ -16,6 +16,8 @@ const MAPS = {
     replaces: ['China', 'Hong Kong', 'Macao'],
     // what "zoom out" shows: [[west, north], [east, south]]
     home: [[72, 54], [136, 17]],
+    // lakes to draw over the grey backdrop: those inside [[west, south], [east, north]]
+    lakes: [[60, 10], [150, 60]],
     out: '../src/categories/china/data/china.json',
   },
   us: {
@@ -23,6 +25,8 @@ const MAPS = {
     targets: STATES,
     replaces: ['United States of America'],
     home: [[-126, 50], [-66, 24]], // the lower 48; Alaska and Hawaii are a fly-to away
+    // world-atlas's Canada counts its half of the Great Lakes as land, so the lakes need drawing back in
+    lakes: [[-170, 15], [-50, 75]],
     out: '../src/categories/us-states/data/us.json',
   },
 };
@@ -31,8 +35,17 @@ const which = process.argv[2];
 const map = MAPS[which];
 if (!map) throw new Error(`Usage: node scripts/build-admin1-data.mjs <${Object.keys(MAPS).join('|')}>`);
 
-const ADMIN1_URL =
-  'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_1_states_provinces.geojson';
+// The "_lakes" version cuts large lakes out of the shapes. Without it, state lines run out to the
+// middle of the Great Lakes, so Michigan is drawn touching Wisconsin across Lake Michigan.
+const NE = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/';
+const ADMIN1_URL = NE + 'ne_50m_admin_1_states_provinces_lakes.geojson';
+const LAKES_URL = NE + 'ne_50m_lakes.geojson';
+
+async function getJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${res.status} ${url}`);
+  return res.json();
+}
 
 const W = 2000;
 const LAT_TOP = 80, LAT_BOT = -57;
@@ -49,9 +62,7 @@ const topo = JSON.parse(readFileSync(new URL('../node_modules/world-atlas/countr
 const countries = feature(topo, topo.objects.countries).features;
 const byCountry = new Map(countries.map((f) => [f.properties.name, f]));
 
-const res = await fetch(ADMIN1_URL);
-if (!res.ok) throw new Error(`${res.status} ${ADMIN1_URL}`);
-const admin1 = (await res.json()).features.filter((f) => f.properties.adm0_a3 === map.adm0);
+const admin1 = (await getJson(ADMIN1_URL)).features.filter((f) => f.properties.adm0_a3 === map.adm0);
 const byDivision = new Map(admin1.map((f) => [f.properties.name, f]));
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -102,15 +113,26 @@ const lines = [...mesh(topo, collection, (a, b) => a !== b).coordinates, ...mesh
 const divisionRings = admin1.flatMap((f) => (f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates.flat() : f.geometry.coordinates));
 const borders = coarse({ type: 'MultiLineString', coordinates: lines }) + path({ type: 'MultiLineString', coordinates: divisionRings });
 
+// ── Lakes: drawn in water color over the grey context (quiz shapes already have theirs cut out) ──
+const [[lw, ls], [le, ln]] = map.lakes;
+const lakes = (await getJson(LAKES_URL)).features
+  .filter((f) => {
+    const [[w, s], [e, n]] = geoBounds(f);
+    return w >= lw && e <= le && s >= ls && n <= ln;
+  })
+  .map((f) => coarse(f))
+  .filter(Boolean)
+  .join('');
+
 const ocean = `M0,${yTop}H${W}V${yBot}H0Z`;
 const graticule = coarse(geoGraticule().step([30, 30]).extent([[-180, LAT_BOT], [180, LAT_TOP]])());
 
 const [[hx0, hy0], [hx1, hy1]] = map.home.map((p) => projection(p));
 const home = [round(hx0), round(hy0), round(hx1 - hx0), round(hy1 - hy0)];
 
-const out = { w: W, top: yTop, bottom: yBot, home, ocean, graticule, context, borders, countries: targets };
+const out = { w: W, top: yTop, bottom: yBot, home, ocean, graticule, context, lakes, borders, countries: targets };
 const json = JSON.stringify(out);
 writeFileSync(new URL(map.out, import.meta.url), json);
 
 const kb = (s) => `${(s.length / 1024).toFixed(0)} KB`;
-console.log(`${which}: ${kb(json)} — ${targets.length} targets, context ${kb(context)}, borders ${kb(borders)}`);
+console.log(`${which}: ${kb(json)} — ${targets.length} targets, context ${kb(context)}, lakes ${kb(lakes)}, borders ${kb(borders)}`);
