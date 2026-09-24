@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { type DrillCopy, pluralize } from '@/lib/drill/copy';
 import { answeredCount, bestKey, regionKey, regionPool } from '@/lib/drill/logic';
 import type { DrillGame } from '@/lib/drill/useGame';
@@ -41,16 +42,31 @@ function ToggleRow({ label, hint, on, onChange }: { label: string; hint: string;
 export function GroupHome({ game, copy, runDescription = 'One miss ends the run.' }: GroupHomeProps) {
   const { store, byId, regions, hasFacts, setShowFacts, setShuffle, toggleRegion, startRun, resume, resetAll } = game;
   const [resetArmed, setResetArmed] = useState(false);
+  const [startArmed, setStartArmed] = useState(false);
 
   const targets = [...byId.values()];
   const countIn = (region: string) => regionPool(targets, region === 'All' ? [] : [region]).length;
   const isSelected = (region: string) => (region === 'All' ? !store.regions.length : store.regions.includes(region));
 
   const total = regionPool(targets, store.regions).length;
-  const best = store.best[bestKey(regionKey(store.regions, regions))];
+  const selection = regionKey(store.regions, regions);
+  const best = store.best[bestKey(selection)] || 0;
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Your best streak for the selected regions: the number the whole game is about, so it leads. */}
+      <div className="flex flex-col gap-2">
+        <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          Best streak · {selection === 'All' ? copy.wholeSet : selection}
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-5xl font-semibold tabular-nums tracking-tight">{best}</span>
+          <span className="text-lg text-muted-foreground tabular-nums">/ {total}</span>
+          {best === total && total > 0 && <span className="ml-2 text-sm font-medium text-emerald-700">Flawless</span>}
+        </div>
+        <Progress value={total ? (best / total) * 100 : 0} className="h-1.5" />
+      </div>
+
       {store.run && (
         <Card className="border-primary/30">
           <CardContent className="flex items-center justify-between gap-3 py-2">
@@ -95,29 +111,38 @@ export function GroupHome({ game, copy, runDescription = 'One miss ends the run.
             label="Show facts"
             on={store.showFacts}
             onChange={setShowFacts}
-            hint={
-              store.showFacts
-                ? `Learn about each ${copy.noun} after you answer, then tap Next.`
-                : 'Off: right answers move on by themselves, for speedrunning.'
-            }
+            hint={`Learn about each ${copy.noun} before moving on.`}
           />
         )}
         <ToggleRow
           label="Shuffle"
           on={store.shuffle}
           onChange={setShuffle}
-          hint={store.shuffle ? 'A new random order every run.' : 'Off: the same order every run, so you can learn it.'}
+          hint="A new order every run."
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        {/* with a run to resume, Resume is the main action and this steps back */}
-        <Button type="button" variant={store.run ? 'outline' : 'default'} className="h-11 text-base" onClick={startRun}>
-          Start · {pluralize(total, copy)}
+        {/* With a run to resume, Resume is the main action and this steps back. Starting over would
+            drop the saved run, so it takes a second tap. */}
+        <Button
+          type="button"
+          variant={store.run ? 'outline' : 'default'}
+          className="h-11 text-base"
+          onClick={() => {
+            if (store.run && !startArmed) {
+              setStartArmed(true);
+              setTimeout(() => setStartArmed(false), 2500);
+              return;
+            }
+            setStartArmed(false);
+            startRun();
+          }}
+        >
+          {startArmed ? 'Tap again to drop your saved run' : `${store.run ? 'Start new run' : 'Start'} · ${pluralize(total, copy)}`}
         </Button>
         <p className="text-center text-xs text-muted-foreground">
           {runDescription}
-          {best ? ` Best ${best}/${total}.` : ''}
         </p>
       </div>
 
@@ -137,7 +162,7 @@ export function GroupHome({ game, copy, runDescription = 'One miss ends the run.
             setResetArmed(false);
           }}
         >
-          {resetArmed ? 'Tap again to erase everything' : 'Erase progress'}
+          {resetArmed ? 'Tap again to erase your progress' : 'Erase progress'}
         </Button>
       </div>
     </div>
