@@ -42,6 +42,10 @@
   stroke-width: 0.6px;
   vector-effect: non-scaling-stroke;
 }
+.lake {
+  fill: #eef1f5;
+  stroke: none;
+}
 .c {
   fill: #c7ccd4;
   stroke: #c7ccd4;
@@ -144,50 +148,5 @@
   100% {
     transform: scale(2.1);
     opacity: 0;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .map-wrap {
-    background: #1a1d24;
-  }
-  .sea {
-    fill: #1a1d24;
-  }
-  .grat {
-    stroke: rgba(255, 255, 255, 0.05);
-  }
-  .ctx {
-    fill: #262a33;
-    stroke: #262a33;
-  }
-  .c {
-    fill: #3a3f4b;
-    stroke: #3a3f4b;
-  }
-  .c.out {
-    fill: #2c303a;
-    stroke: #2c303a;
-  }
-  .c.target {
-    fill: #f4f4f5;
-    stroke: #f4f4f5;
-  }
-  .borders {
-    stroke: rgba(255, 255, 255, 0.15);
-  }
-  .sea-edge {
-    stroke: rgba(255, 255, 255, 0.12);
-  }
-  #overlay .ring {
-    stroke: #f4f4f5;
-  }
-  #overlay .pulse {
-    stroke: #f4f4f5;
-    fill: rgba(244, 244, 245, 0.12);
-  }
-  #overlay .label {
-    fill: #f4f4f5;
-    stroke: #1a1d24;
   }
 }
