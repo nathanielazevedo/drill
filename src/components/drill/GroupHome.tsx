@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { type DrillCopy, pluralize } from '@/lib/drill/copy';
-import { bestKey, regionKey, regionPool } from '@/lib/drill/logic';
+import { answeredCount, bestKey, regionKey, regionPool } from '@/lib/drill/logic';
 import type { DrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
 
@@ -57,7 +57,7 @@ export function GroupHome({ game, copy, runDescription = 'One miss ends the run.
             <div>
               <div className="text-sm font-medium">Continue</div>
               <div className="text-xs text-muted-foreground">
-                {store.run.i} of {store.run.order.length} ·{' '}
+                {answeredCount(store.run)} of {store.run.order.length} ·{' '}
                 {store.run.region === 'All' ? copy.wholeSet : store.run.region}
               </div>
             </div>

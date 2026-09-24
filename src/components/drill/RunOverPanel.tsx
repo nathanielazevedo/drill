@@ -30,7 +30,7 @@ export function RunOverPanel({ run, store, target, pickedName, facts, onPlayAgai
           <div className="text-xs opacity-80">{run.newBest ? 'New best!' : `Best ${best}`}</div>
         </div>
       </div>
-      {facts}
+      {facts && <div className="border-t border-current/15 pt-3">{facts}</div>}
       <div className="flex gap-2">
         <Button type="button" className="flex-1" onClick={onPlayAgain}>
           Play again

@@ -37,7 +37,7 @@ export function CountryFacts({ target }: { target: DrillTarget }) {
   ];
 
   return (
-    <div className="mt-2 flex flex-col gap-2 border-t border-current/15 pt-2">
+    <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <span className="font-mono text-xs opacity-80">{f.say}</span>
         {canSpeak && (

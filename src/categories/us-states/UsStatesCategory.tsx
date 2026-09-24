@@ -47,7 +47,7 @@ function StateFacts({ target }: { target: DrillTarget }) {
   ];
 
   return (
-    <div className="mt-2 flex flex-col gap-2 border-t border-current/15 pt-2">
+    <div className="flex flex-col gap-2">
       <span className="font-mono text-xs opacity-80">{f.abbr}</span>
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
         {rows.map(([k, v]) => (

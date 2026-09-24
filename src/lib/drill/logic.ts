@@ -56,6 +56,11 @@ export function bestKey(region: string): string {
   return `strict:${region}`;
 }
 
+/** How many questions a run has answered so far. */
+export function answeredCount(run: Pick<RunState, 'results'>): number {
+  return Object.keys(run.results || {}).length;
+}
+
 /** Where a category's progress lives in localStorage. */
 export function storageKeyFor(categoryId: string): string {
   return `shit-you-should-know.${categoryId}.v1`;
@@ -71,7 +76,7 @@ export function peekProgress(categoryId: string): { best: number; inProgress: bo
     const mode = saved?.run?.mode;
     return {
       best: Number(saved?.best?.[bestKey('All')]) || 0,
-      inProgress: !!saved?.run && (mode === undefined || mode === 'strict'),
+      inProgress: !!saved?.run && (mode === undefined || mode === 'strict') && answeredCount(saved.run) > 0,
     };
   } catch {
     return { best: 0, inProgress: false };
@@ -105,7 +110,9 @@ export function loadStore(storageKey: string, targets: DrillTarget[], regions: r
       Array.isArray(r.order) &&
       r.order.length > 0 &&
       r.order.every((id) => byId.has(id)) &&
-      r.i < r.order.length;
+      r.i < r.order.length &&
+      // older versions saved a run as soon as it started; one with no answers isn't worth resuming
+      answeredCount(r) > 0;
     out.run = valid ? { ...r, results: r.results || {}, correct: r.correct | 0 } : null;
     return out;
   } catch {

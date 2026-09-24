@@ -49,7 +49,7 @@ function ProvinceFacts({ target }: { target: DrillTarget }) {
   if (f.capital !== '—') rows.push(['Capital', f.capital]);
 
   return (
-    <div className="mt-2 flex flex-col gap-2 border-t border-current/15 pt-2">
+    <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <span className="text-base">{f.zh}</span>
         <span className="text-xs opacity-80">{f.pinyin}</span>
