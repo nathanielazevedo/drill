@@ -56,6 +56,28 @@ export function bestKey(region: string): string {
   return `strict:${region}`;
 }
 
+/** Where a category's progress lives in localStorage. */
+export function storageKeyFor(categoryId: string): string {
+  return `shit-you-should-know.${categoryId}.v1`;
+}
+
+/**
+ * A quick look at a category's saved progress for the category list, without loading its targets:
+ * the best streak over the whole set, and whether there's a run to resume.
+ */
+export function peekProgress(categoryId: string): { best: number; inProgress: boolean } {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKeyFor(categoryId)) || 'null');
+    const mode = saved?.run?.mode;
+    return {
+      best: Number(saved?.best?.[bestKey('All')]) || 0,
+      inProgress: !!saved?.run && (mode === undefined || mode === 'strict'),
+    };
+  } catch {
+    return { best: 0, inProgress: false };
+  }
+}
+
 export function defaultStore(): Store {
   return { v: 1, best: {}, regions: [], showFacts: true, shuffle: false, run: null };
 }

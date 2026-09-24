@@ -3,6 +3,7 @@ import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget } from '@/lib/drill/types';
+import { storageKeyFor } from '@/lib/drill/logic';
 import { useDrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
 import creditsData from './data/credits.json';
@@ -117,7 +118,7 @@ function PresidentFacts({ target }: { target: DrillTarget }) {
 
 export function PresidentsCategory() {
   const game = useDrillGame({
-    storageKey: 'shit-you-should-know.presidents.v1',
+    storageKey: storageKeyFor('presidents'),
     targets,
     regions: REGIONS,
     hasFacts: true,

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
+import { useBackOverride } from '@/lib/back';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget, WorldData } from '@/lib/drill/types';
 import type { DrillGame } from '@/lib/drill/useGame';
@@ -7,7 +8,7 @@ import { ChoiceGrid } from './ChoiceGrid';
 import { Hud } from './Hud';
 import { ResultBanner } from './ResultBanner';
 import { RunDoneDialog } from './RunDoneDialog';
-import { RunOverDialog } from './RunOverDialog';
+import { RunOverPanel } from './RunOverPanel';
 import { WorldMap } from './WorldMap';
 
 interface DrillScreenProps {
@@ -23,6 +24,8 @@ interface DrillScreenProps {
 
 export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: DrillScreenProps) {
   const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, advance, quitToHome, startRun } = game;
+  // During a run, the header's back arrow returns to this category's menu (the run stays saved).
+  useBackOverride(quitToHome);
 
   if (!run || !target) return null;
 
@@ -36,7 +39,7 @@ export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: D
 
   return (
     <div className="flex flex-col gap-4">
-      <Hud run={run} store={store} phase={phase} copy={copy} onQuit={quitToHome} />
+      <Hud run={run} store={store} phase={phase} copy={copy} />
 
       {renderStage
         ? renderStage(target, outcome)
@@ -54,7 +57,19 @@ export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: D
         </ResultBanner>
       )}
 
-      <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
+      {phase === 'over' ? (
+        <RunOverPanel
+          run={run}
+          store={store}
+          target={target}
+          pickedName={pickedName}
+          facts={showFacts ? renderFacts?.(target) : null}
+          onPlayAgain={startRun}
+          onHome={quitToHome}
+        />
+      ) : (
+        <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
+      )}
 
       {phase === 'ok' && !nextOnTop && (
         <Button type="button" onClick={advance}>
@@ -62,16 +77,6 @@ export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: D
         </Button>
       )}
 
-      <RunOverDialog
-        open={phase === 'over'}
-        run={run}
-        store={store}
-        target={target}
-        pickedName={pickedName}
-        facts={showFacts ? renderFacts?.(target) : null}
-        onPlayAgain={startRun}
-        onHome={quitToHome}
-      />
       <RunDoneDialog
         open={phase === 'done'}
         run={run}

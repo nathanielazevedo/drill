@@ -122,8 +122,11 @@ function reducer(
       if (state.phase === 'over' || state.phase === 'done') return { ...state, screen: 'home', activeRun: null };
       return { ...state, screen: 'home' };
 
-    case 'resetAll':
-      return { store: defaultStore(), activeRun: null, screen: 'home', phase: 'asking', pickedId: null };
+    // Erases scores and the saved run; your settings (region, facts, shuffle) stay as they are.
+    case 'resetAll': {
+      const { regions: picked, showFacts, shuffle } = state.store;
+      return { store: { ...defaultStore(), regions: picked, showFacts, shuffle }, activeRun: null, screen: 'home', phase: 'asking', pickedId: null };
+    }
 
     default:
       return state;

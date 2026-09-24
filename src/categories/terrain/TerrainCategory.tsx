@@ -4,6 +4,7 @@ import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget, WorldData } from '@/lib/drill/types';
+import { storageKeyFor } from '@/lib/drill/logic';
 import { useDrillGame } from '@/lib/drill/useGame';
 
 const world = worldData as unknown as WorldData;
@@ -36,7 +37,7 @@ const targets: DrillTarget[] = (featuresData as RawFeature[]).map((t) => ({
 const copy: DrillCopy = { noun: 'feature', nounPlural: 'features', groupLabel: 'Type', wholeSet: 'Everything' };
 
 export function TerrainCategory() {
-  const game = useDrillGame({ storageKey: 'shit-you-should-know.terrain.v1', targets, regions: REGIONS });
+  const game = useDrillGame({ storageKey: storageKeyFor('terrain'), targets, regions: REGIONS });
 
   return game.screen === 'home' ? (
     <GroupHome game={game} copy={copy} />

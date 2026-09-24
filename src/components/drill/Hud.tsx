@@ -1,5 +1,3 @@
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import type { DrillCopy } from '@/lib/drill/copy';
 import { bestKey } from '@/lib/drill/logic';
@@ -11,10 +9,9 @@ interface HudProps {
   store: Store;
   phase: Phase;
   copy: DrillCopy;
-  onQuit: () => void;
 }
 
-export function Hud({ run, store, phase, copy, onQuit }: HudProps) {
+export function Hud({ run, store, phase, copy }: HudProps) {
   const total = run.order.length;
   const settled = phase === 'ok' || phase === 'over';
   const shown = Math.min(run.i + (settled ? 1 : 0), total);
@@ -37,9 +34,6 @@ export function Hud({ run, store, phase, copy, onQuit }: HudProps) {
           <span className="text-right">
             <b>{Math.max(best, run.correct)}</b> <span className="text-xs text-muted-foreground">best</span>
           </span>
-          <Button type="button" size="icon" variant="ghost" onClick={onQuit} aria-label="Quit to menu">
-            <X />
-          </Button>
         </div>
       </div>
       <Progress value={(shown / total) * 100} className="h-1" />

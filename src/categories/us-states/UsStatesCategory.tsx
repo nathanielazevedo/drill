@@ -4,6 +4,7 @@ import { DrillScreen } from '@/components/drill/DrillScreen';
 import { GroupHome } from '@/components/drill/GroupHome';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget, WorldData } from '@/lib/drill/types';
+import { storageKeyFor } from '@/lib/drill/logic';
 import { useDrillGame } from '@/lib/drill/useGame';
 
 const us = usData as unknown as WorldData;
@@ -62,7 +63,7 @@ function StateFacts({ target }: { target: DrillTarget }) {
 }
 
 export function UsStatesCategory() {
-  const game = useDrillGame({ storageKey: 'shit-you-should-know.us-states.v1', targets, regions: REGIONS, hasFacts: true });
+  const game = useDrillGame({ storageKey: storageKeyFor('us-states'), targets, regions: REGIONS, hasFacts: true });
 
   return game.screen === 'home' ? (
     <GroupHome game={game} copy={copy} />
