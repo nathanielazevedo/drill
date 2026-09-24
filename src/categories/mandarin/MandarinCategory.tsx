@@ -29,6 +29,9 @@ const targets: DrillTarget[] = words.map((w) => ({ id: w.id, name: w.en, region:
 
 const copy: DrillCopy = { noun: 'word', nounPlural: 'words', groupLabel: 'Type', wholeSet: 'All words' };
 
+// words.json is sorted roughly most common first; frequency lists disagree on the exact ranks.
+const runDescription = 'Most common first. One miss ends the run.';
+
 function WordCard({ target, outcome }: { target: DrillTarget; outcome: 'ok' | 'bad' | null }) {
   const w = byWord.get(target.id)!;
   return (
@@ -64,10 +67,16 @@ function WordFacts({ target }: { target: DrillTarget }) {
 }
 
 export function MandarinCategory() {
-  const game = useDrillGame({ storageKey: storageKeyFor('mandarin'), targets, regions: REGIONS, hasFacts: true });
+  const game = useDrillGame({
+    storageKey: storageKeyFor('mandarin'),
+    targets,
+    regions: REGIONS,
+    hasFacts: true,
+    ordered: true,
+  });
 
   return game.screen === 'home' ? (
-    <GroupHome game={game} copy={copy} />
+    <GroupHome game={game} copy={copy} runDescription={game.store.shuffle ? undefined : runDescription} />
   ) : (
     <DrillScreen
       game={game}
