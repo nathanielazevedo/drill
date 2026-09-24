@@ -24,6 +24,8 @@ interface RawFeature {
   type: string;
   f: [number, number, number, number];
   a: number;
+  /** the feature's outline, when Natural Earth has one */
+  d?: string;
 }
 
 const targets: DrillTarget[] = (featuresData as RawFeature[]).map((t) => ({
@@ -34,6 +36,8 @@ const targets: DrillTarget[] = (featuresData as RawFeature[]).map((t) => ({
   a: t.a,
 }));
 
+const outlines = (featuresData as RawFeature[]).flatMap((t) => (t.d ? [{ id: t.id, d: t.d }] : []));
+
 const copy: DrillCopy = { noun: 'feature', nounPlural: 'features', groupLabel: 'Type', wholeSet: 'Everything' };
 
 export function TerrainCategory() {
@@ -42,6 +46,6 @@ export function TerrainCategory() {
   return game.screen === 'home' ? (
     <GroupHome game={game} copy={copy} />
   ) : (
-    <DrillScreen basemap={world} game={game} copy={copy} />
+    <DrillScreen basemap={world} outlines={outlines} game={game} copy={copy} />
   );
 }

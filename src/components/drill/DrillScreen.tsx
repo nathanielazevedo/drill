@@ -8,11 +8,13 @@ import { ChoiceGrid } from './ChoiceGrid';
 import { Hud } from './Hud';
 import { RunDoneDialog } from './RunDoneDialog';
 import { RunOverPanel } from './RunOverPanel';
-import { WorldMap } from './WorldMap';
+import { type TargetOutline, WorldMap } from './WorldMap';
 
 interface DrillScreenProps {
   /** the world map to show targets on; categories without one pass `renderStage` instead */
   basemap?: WorldData;
+  /** outlines for targets that aren't shapes on the basemap (Terrain's deserts, lakes...) */
+  outlines?: TargetOutline[];
   /** what to show in place of the map for the current target (a portrait, a flag, ...) */
   renderStage?: (target: DrillTarget, outcome: 'ok' | 'bad' | null) => ReactNode;
   game: DrillGame;
@@ -21,7 +23,7 @@ interface DrillScreenProps {
   renderFacts?: (target: DrillTarget) => ReactNode;
 }
 
-export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: DrillScreenProps) {
+export function DrillScreen({ basemap, outlines, renderStage, game, copy, renderFacts }: DrillScreenProps) {
   const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, advance, quitToHome, startRun } = game;
   // During a run, the header's back arrow returns to this category's menu (the run stays saved).
   useBackOverride(quitToHome);
@@ -43,7 +45,7 @@ export function DrillScreen({ basemap, renderStage, game, copy, renderFacts }: D
 
       {renderStage
         ? renderStage(target, outcome)
-        : basemap && <WorldMap world={basemap} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />}
+        : basemap && <WorldMap world={basemap} outlines={outlines} targetId={targetId} targetGeo={targetGeo} outcome={outcome} run={run} />}
 
       {showNext && (
         <Button type="button" onClick={advance}>

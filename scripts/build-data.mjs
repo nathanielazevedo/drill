@@ -1,5 +1,5 @@
 // Turns Natural Earth (via world-atlas) into pre-projected SVG paths → src/categories/countries/data/world.json
-// Run: npm run build:data
+// Run: npm run build:data (downloads Natural Earth's ~1MB lakes file for the lakes layer)
 import { readFileSync, writeFileSync } from 'node:fs';
 import { geoMercator, geoPath, geoCircle, geoGraticule } from 'd3-geo';
 import { feature, mesh } from 'topojson-client';
@@ -118,15 +118,22 @@ for (const line of lines) {
 }
 const borders = path({ type: 'MultiLineString', coordinates: kept });
 
+// ── Lakes: world-atlas counts lakes as land (the Great Lakes, Victoria, Baikal...), so draw them
+// back in as water over the land. Terrain asks about lakes, so they have to be visible. ──
+const LAKES_URL = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_lakes.geojson';
+const lakesRes = await fetch(LAKES_URL);
+if (!lakesRes.ok) throw new Error(`${lakesRes.status} ${LAKES_URL}`);
+const lakes = (await lakesRes.json()).features.map((f) => path(f)).filter(Boolean).join('');
+
 // ── Ocean + graticule ─────────────────────────────────────────────────────
 const ocean = `M0,${yTop}H${W}V${yBot}H0Z`;
 const graticule = path(geoGraticule().step([30, 30]).extent([[-180, LAT_BOT], [180, LAT_TOP]])());
 
-const out = { w: W, top: yTop, bottom: yBot, ocean, graticule, context, borders, countries };
+const out = { w: W, top: yTop, bottom: yBot, ocean, graticule, context, lakes, borders, countries };
 const json = JSON.stringify(out);
 writeFileSync(new URL('../src/data/world.json', import.meta.url), json);
 
 const kb = (s) => `${(s.length / 1024).toFixed(0)} KB`;
-console.log(`world.json ${kb(json)} — ${countries.length} countries, context ${kb(context)}, borders ${kb(borders)}, world ${W}×${round(yBot - yTop)}`);
+console.log(`world.json ${kb(json)} — ${countries.length} countries, context ${kb(context)}, lakes ${kb(lakes)}, borders ${kb(borders)}, world ${W}×${round(yBot - yTop)}`);
 const wide = countries.filter((c) => c.f[2] > 400).map((c) => `${c.name} ${c.f[2]}`);
 console.log('very wide focus frames:', wide.join(', ') || 'none');

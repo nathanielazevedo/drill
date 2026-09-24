@@ -11,8 +11,8 @@ one miss ends the run, and your best streak is kept per region.
 
 - **Countries** — name every country; pick a region first. Ported from a standalone map-drill app.
 - **Terrain** — oceans, lakes, mountain ranges, and deserts, filtered by type instead
-  of region. These don't have official boundaries, so the map shows a locator ring over the right
-  area rather than a precise outline.
+  of region. Each question shades the feature's shape from Natural Earth's physical data (the
+  Mojave, which it doesn't have, gets just the locator ring).
 - **US States** — all 50, filtered by Census region, with capital, largest city, statehood and
   nickname in the facts. DC is on the map but not quizzed.
 - **Chinese Provinces** — the 31 mainland provincial-level divisions plus Hong Kong and Macau,
@@ -41,8 +41,10 @@ screen for anyone who hasn't opened it).
 - `src/data/world.json` — the shared physical basemap (ocean, land, borders), generated from
   Natural Earth via `world-atlas`/`d3-geo`/`topojson-client`. Regenerate after editing the
   Countries quiz set in `scripts/countries.mjs` with `npm run build:data`.
-- `src/categories/terrain/data/features.json` — Terrain's hand-authored bounding boxes. Edit
-  `scripts/terrain-features.mjs` and regenerate with `npm run build:terrain-data`.
+- `src/categories/terrain/data/features.json` — Terrain's features: a hand-authored box to fly to,
+  plus an outline from Natural Earth (downloaded by the script). Edit `scripts/terrain-features.mjs`
+  and regenerate with `npm run build:terrain-data`.
+- The world map also has a lakes layer from Natural Earth, since world-atlas counts lakes as land.
 - `src/categories/china/data/china.json` and `src/categories/us-states/data/us.json` — the China and
   US basemaps: Natural Earth 50m admin-1 provinces/states (downloaded by
   `scripts/build-admin1-data.mjs`) on the same projection as the world map. Edit

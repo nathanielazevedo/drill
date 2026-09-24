@@ -46,6 +46,24 @@
   fill: #eef1f5;
   stroke: none;
 }
+/* A target's own shape (a desert, a lake...), shown only while it's the question. See-through, so
+   the borders and coastlines drawn over it still show what it spans. No stroke: shapes pieced
+   together from several (the Pacific is North + South, cut at 180°) would show their seams.
+   Not called "outline": that's a Tailwind utility, and it draws a box around the element. */
+.feature-shape {
+  display: none;
+  fill: rgba(15, 23, 42, 0.6);
+  pointer-events: none;
+}
+.feature-shape.shown {
+  display: inline;
+}
+.feature-shape.ok {
+  fill: rgba(22, 163, 74, 0.6);
+}
+.feature-shape.bad {
+  fill: rgba(220, 38, 38, 0.6);
+}
 .c {
   fill: #c7ccd4;
   stroke: #c7ccd4;

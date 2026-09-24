@@ -12,8 +12,16 @@ export interface TargetGeo {
   a: number;
 }
 
+/** A target's own outline, drawn over the map only while it's the question (a desert, a lake...). */
+export interface TargetOutline {
+  id: string;
+  d: string;
+}
+
 interface WorldMapProps {
   world: WorldData;
+  /** outlines for targets that aren't one of the basemap's own shapes */
+  outlines?: TargetOutline[];
   targetId: string | null;
   targetGeo: TargetGeo | null;
   outcome: 'ok' | 'bad' | null;
@@ -42,14 +50,17 @@ function ringRadius([, , w, h]: [number, number, number, number]): number {
   return half * (half > 75 ? 1.05 : 1.3);
 }
 
-function buildSvgInner(world: WorldData): string {
+// Layers, bottom to top: sea, grey context, the fillable shapes, lakes (over the land, since the
+// world data counts lakes as land), the current target's outline, then borders over everything.
+function buildSvgInner(world: WorldData, outlines: TargetOutline[]): string {
   const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, lakes, borders, countries } = world;
   return `
     <path class="sea" d="${ocean}"/>
     <path class="grat" d="${graticule}"/>
     <path class="ctx" d="${context}"/>
-    ${lakes ? `<path class="lake" d="${lakes}"/>` : ''}
     <g id="land">${countries.map((c) => `<path class="c" data-id="${c.id}" d="${c.d}"/>`).join('')}</g>
+    ${lakes ? `<path class="lake" d="${lakes}"/>` : ''}
+    <g id="outlines">${outlines.map((o) => `<path class="feature-shape" data-id="${o.id}" d="${o.d}"/>`).join('')}</g>
     <path class="borders" d="${borders}"/>
     <path class="sea-edge" d="M0,${TOP}H${W}M0,${BOT}H${W}"/>`;
 }
@@ -60,7 +71,7 @@ function buildSvgInner(world: WorldData): string {
  * harmless no-op otherwise, which is how categories with no fillable shape (lakes, mountain
  * ranges, ...) still get the locator without any per-target geometry of their own.
  */
-export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapProps) {
+export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, run }: WorldMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<SVGGElement>(null);
@@ -69,6 +80,7 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
 
   const eRef = useRef<{
     pathEls: Map<string, SVGPathElement>;
+    outlineEls: Map<string, SVGPathElement>;
     ring: SVGCircleElement;
     pulse: SVGCircleElement;
     label: SVGTextElement;
@@ -92,7 +104,7 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
 
     const world1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     world1.setAttribute('id', 'world');
-    world1.innerHTML = buildSvgInner(world);
+    world1.innerHTML = buildSvgInner(world, outlines);
     svg.insertBefore(world1, overlay);
 
     const useA = document.createElementNS('http://www.w3.org/2000/svg', 'use');
@@ -109,8 +121,13 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
       [...land.children].map((el) => [el.getAttribute('data-id')!, el as SVGPathElement]),
     );
 
+    const outlineEls = new Map<string, SVGPathElement>(
+      [...world1.querySelector('#outlines')!.children].map((el) => [el.getAttribute('data-id')!, el as SVGPathElement]),
+    );
+
     const e = {
       pathEls,
+      outlineEls,
       ring: overlay.querySelector('.ring') as SVGCircleElement,
       pulse: overlay.querySelector('.pulse') as SVGCircleElement,
       label: overlay.querySelector('.label') as SVGTextElement,
@@ -227,12 +244,16 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
     function setTarget(id: string | null) {
       const prev = e.targetId && e.pathEls.get(e.targetId);
       if (prev) prev.classList.remove('target', 'ok', 'bad');
+      const prevOutline = e.targetId && e.outlineEls.get(e.targetId);
+      if (prevOutline) prevOutline.classList.remove('shown', 'ok', 'bad');
       e.targetId = id;
       const el = id && e.pathEls.get(id);
       if (el) {
         land.appendChild(el);
         el.classList.add('target');
       }
+      const outline = id && e.outlineEls.get(id);
+      if (outline) outline.classList.add('shown');
       e.label.textContent = '';
       e.ring.classList.remove('ok', 'bad');
       e.pulse.classList.remove('ok', 'bad', 'still');
@@ -240,8 +261,8 @@ export function WorldMap({ world, targetId, targetGeo, outcome, run }: WorldMapP
     }
 
     function markOutcome(kind: 'ok' | 'bad') {
-      const el = e.targetId && e.pathEls.get(e.targetId);
-      if (el) {
+      for (const el of [e.targetId && e.pathEls.get(e.targetId), e.targetId && e.outlineEls.get(e.targetId)]) {
+        if (!el) continue;
         el.classList.remove('ok', 'bad');
         el.classList.add(kind);
       }
