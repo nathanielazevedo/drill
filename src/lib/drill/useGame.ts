@@ -175,7 +175,14 @@ export function useDrillGame({ storageKey, targets, regions, hasFacts = false, o
   const run = state.activeRun;
   const targetId = run ? run.order[Math.min(run.i, run.order.length - 1)] : null;
   const target = targetId ? byId.get(targetId) ?? null : null;
-  const choices = useMemo(() => (targetId ? choicesFor(targets, byId, targetId) : []), [targets, byId, targetId]);
+  // Redrawn per question: a new target, or the same one again in a new run (each run gets a new
+  // `order` array; within a run it's carried along unchanged, so answering doesn't reshuffle).
+  const order = run?.order;
+  const choices = useMemo(
+    () => (targetId ? choicesFor(targets, byId, targetId) : []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- `order` only marks a new run
+    [targets, byId, targetId, order],
+  );
 
   return {
     store: state.store,

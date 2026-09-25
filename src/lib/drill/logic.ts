@@ -1,4 +1,4 @@
-import { hashStr, seededRand, shuffled } from './rng';
+import { seededRand, shuffled } from './rng';
 import type { DrillTarget, RunState, Store } from './types';
 
 export const CHOICES = 8;
@@ -39,10 +39,15 @@ export function toggleRegion(selected: string[], region: string, regions: readon
 }
 
 // Multiple choice: the answer plus 7 others, drawn from its own region first so they're plausible,
-// then listed A–Z. Seeded by target, so a given question always gets the same options.
-export function choicesFor(targets: DrillTarget[], byId: Map<string, DrillTarget>, id: string): string[] {
+// then listed A–Z. Drawn fresh every time a question is asked, so you can't learn a question by
+// its options or where the answer sat among them.
+export function choicesFor(
+  targets: DrillTarget[],
+  byId: Map<string, DrillTarget>,
+  id: string,
+  rand: () => number = Math.random,
+): string[] {
   const target = byId.get(id)!;
-  const rand = seededRand(hashStr(id));
   const others = targets.filter((t) => t.id !== id);
   const near = shuffled(others.filter((t) => t.region === target.region).map((t) => t.id), rand);
   const far = shuffled(others.filter((t) => t.region !== target.region).map((t) => t.id), rand);
