@@ -65,8 +65,8 @@
   fill: rgba(220, 38, 38, 0.6);
 }
 .c {
-  fill: #c7ccd4;
-  stroke: #c7ccd4;
+  fill: var(--tint, #c7ccd4);
+  stroke: var(--tint, #c7ccd4);
   stroke-width: 0.6px;
   vector-effect: non-scaling-stroke;
 }
@@ -108,6 +108,30 @@
   stroke: rgba(15, 23, 42, 0.12);
   stroke-width: 1.2px;
   vector-effect: non-scaling-stroke;
+}
+
+/* Names written on the map itself (only the made-up Mandarin map has them). */
+.map-labels text {
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+.place-label {
+  font-weight: 500;
+  fill: #1e293b;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 0.25em;
+  stroke-linejoin: round;
+  paint-order: stroke fill;
+}
+.place-label.on-target {
+  fill: #fff;
+  stroke: none;
+}
+.sea-label {
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  fill: #94a3b8;
 }
 
 #overlay .ring {

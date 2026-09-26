@@ -54,4 +54,11 @@ export const CATEGORIES: CategoryDef[] = [
     size: 100,
     Component: lazy(() => import('./mandarin/MandarinCategory').then((m) => ({ default: m.MandarinCategory }))),
   },
+  {
+    id: 'mandarin-map',
+    name: 'Mandarin Map',
+    description: 'Words built from pieces, on a map of their own.',
+    size: 172,
+    Component: lazy(() => import('./mandarin-map/MandarinMapCategory').then((m) => ({ default: m.MandarinMapCategory }))),
+  },
 ];

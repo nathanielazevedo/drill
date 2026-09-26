@@ -8,6 +8,21 @@ export interface Country {
   f: [number, number, number, number];
   /** projected area, used to decide if a country needs a locator ring */
   a: number;
+  /** its own fill color, in place of the usual grey (Mandarin Map colors each continent) */
+  tint?: string;
+}
+
+/** Text drawn on the map at a fixed size in map units, so it grows as you zoom in. */
+export interface MapLabel {
+  x: number;
+  y: number;
+  t: string;
+  /** font size, in map units */
+  s: number;
+  /** 'sea' for the big spaced-out names of seas or continents; otherwise a place's own name */
+  k?: 'sea';
+  /** the target it names, so it can turn light while that target is filled in dark */
+  id?: string;
 }
 
 /** A physical world basemap: ocean, land silhouettes, borders, graticule. `countries` are the fillable quiz shapes. */
@@ -24,6 +39,10 @@ export interface WorldData {
   lakes?: string;
   borders: string;
   countries: Country[];
+  /** names written on the map (the made-up Mandarin map labels its places; real maps don't, since that's the quiz) */
+  labels?: MapLabel[];
+  /** a map with edges: no wrapping around east to west like the world does */
+  noWrap?: boolean;
 }
 
 /**

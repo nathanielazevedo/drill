@@ -21,6 +21,10 @@ one miss ends the run, and your best streak is kept per region.
 - **US Presidents** — all 45 in order, from their portraits (no map).
 - **Mandarin** — 100 of the most common words, shown in pinyin only (no characters); pick the
   English meaning. Grouped by word type, with an example sentence in the facts.
+- **Mandarin Map** — 80 one-syllable building blocks (rén, dà, diàn…) as territories on a made-up
+  map, one continent per theme, and 92 two-block words (dàrén, diànnǎo…) asked by lighting up both
+  blocks with a bridge between them. Blocks that build words together are drawn near each other.
+  The map is generated from `data/blocks.json` by `npm run build:mandarin-map`.
 
 ## Run it
 

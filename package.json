@@ -12,6 +12,7 @@
     "build:terrain-data": "node scripts/build-terrain-data.mjs",
     "build:china-data": "node scripts/build-admin1-data.mjs china",
     "build:us-data": "node scripts/build-admin1-data.mjs us",
+    "build:mandarin-map": "node scripts/build-mandarin-map.mjs",
     "fetch:portraits": "node scripts/fetch-president-portraits.mjs"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "d3-contour": "^4.0.2",
     "d3-geo": "^3.1.1",
     "oxlint": "^1.81.0",
     "topojson-client": "^3.1.0",

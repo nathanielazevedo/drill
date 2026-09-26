@@ -50,19 +50,29 @@ function ringRadius([, , w, h]: [number, number, number, number]): number {
   return half * (half > 75 ? 1.05 : 1.3);
 }
 
+const escapeXml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
 // Layers, bottom to top: sea, grey context, the fillable shapes, lakes (over the land, since the
-// world data counts lakes as land), the current target's outline, then borders over everything.
+// world data counts lakes as land), the current target's outline, borders, then any labels.
 function buildSvgInner(world: WorldData, outlines: TargetOutline[]): string {
-  const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, lakes, borders, countries } = world;
+  const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, lakes, borders, countries, labels = [] } = world;
   return `
     <path class="sea" d="${ocean}"/>
     <path class="grat" d="${graticule}"/>
     <path class="ctx" d="${context}"/>
-    <g id="land">${countries.map((c) => `<path class="c" data-id="${c.id}" d="${c.d}"/>`).join('')}</g>
+    <g id="land">${countries
+      .map((c) => `<path class="c" data-id="${c.id}" d="${c.d}"${c.tint ? ` style="--tint:${c.tint}"` : ''}/>`)
+      .join('')}</g>
     ${lakes ? `<path class="lake" d="${lakes}"/>` : ''}
     <g id="outlines">${outlines.map((o) => `<path class="feature-shape" data-id="${o.id}" d="${o.d}"/>`).join('')}</g>
     <path class="borders" d="${borders}"/>
-    <path class="sea-edge" d="M0,${TOP}H${W}M0,${BOT}H${W}"/>`;
+    ${world.noWrap ? '' : `<path class="sea-edge" d="M0,${TOP}H${W}M0,${BOT}H${W}"/>`}
+    <g class="map-labels">${labels
+      .map(
+        (l) =>
+          `<text class="${l.k === 'sea' ? 'sea-label' : 'place-label'}"${l.id ? ` data-id="${l.id}"` : ''} x="${l.x}" y="${l.y}" font-size="${l.s}">${escapeXml(l.t)}</text>`,
+      )
+      .join('')}</g>`;
 }
 
 /**
@@ -81,6 +91,7 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
   const eRef = useRef<{
     pathEls: Map<string, SVGPathElement>;
     outlineEls: Map<string, SVGPathElement>;
+    labelEls: Map<string, SVGTextElement>;
     ring: SVGCircleElement;
     pulse: SVGCircleElement;
     label: SVGTextElement;
@@ -107,14 +118,18 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
     world1.innerHTML = buildSvgInner(world, outlines);
     svg.insertBefore(world1, overlay);
 
-    const useA = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    useA.setAttribute('href', '#world');
-    useA.setAttribute('x', String(-W));
-    const useB = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    useB.setAttribute('href', '#world');
-    useB.setAttribute('x', String(W));
-    svg.insertBefore(useA, overlay);
-    svg.insertBefore(useB, overlay);
+    // A copy either side, so panning past the date line carries on around the world.
+    const wraps = !world.noWrap;
+    if (wraps) {
+      const useA = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      useA.setAttribute('href', '#world');
+      useA.setAttribute('x', String(-W));
+      const useB = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      useB.setAttribute('href', '#world');
+      useB.setAttribute('x', String(W));
+      svg.insertBefore(useA, overlay);
+      svg.insertBefore(useB, overlay);
+    }
 
     const land = world1.querySelector('#land')!;
     const pathEls = new Map<string, SVGPathElement>(
@@ -125,9 +140,14 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
       [...world1.querySelector('#outlines')!.children].map((el) => [el.getAttribute('data-id')!, el as SVGPathElement]),
     );
 
+    const labelEls = new Map<string, SVGTextElement>(
+      [...world1.querySelectorAll<SVGTextElement>('.map-labels text[data-id]')].map((el) => [el.dataset.id!, el]),
+    );
+
     const e = {
       pathEls,
       outlineEls,
+      labelEls,
       ring: overlay.querySelector('.ring') as SVGCircleElement,
       pulse: overlay.querySelector('.pulse') as SVGCircleElement,
       label: overlay.querySelector('.label') as SVGTextElement,
@@ -148,9 +168,12 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
       }
       return { cx: W / 2, cy: (TOP + BOT) / 2, w: Math.max(W * 1.03, (BOT - TOP) * 1.03 * e.aspect) };
     };
+    // Round the world, or (on a map with edges) no further than its edges.
     const wrapX = () => {
-      e.view.cx = ((e.view.cx % W) + W) % W;
+      e.view.cx = wraps ? ((e.view.cx % W) + W) % W : Math.min(Math.max(e.view.cx, 0), W);
     };
+    // Which copy of the world to use for x, so flying and the ring take the short way round.
+    const nearestCopy = (x: number) => (wraps ? x + Math.round((e.view.cx - x) / W) * W : x);
     const fitY = (v: View) => {
       const h = v.w / e.aspect;
       const worldH = BOT - TOP;
@@ -174,8 +197,7 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
       const upp = e.view.w / e.pxW;
       const [x, y, w, h] = t.f;
       const cy = y + h / 2;
-      let cx = x + w / 2;
-      cx += Math.round((e.view.cx - cx) / W) * W;
+      const cx = nearestCopy(x + w / 2);
       // Every target gets the ring, whatever its size or the zoom, so the question always
       // looks the same.
       const r = Math.max(ringRadius(t.f), 18 * upp);
@@ -212,8 +234,7 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
 
     function flyTo(t: View, ms = 800) {
       cancelAnimationFrame(e.anim);
-      const target = { ...t };
-      target.cx += Math.round((e.view.cx - target.cx) / W) * W;
+      const target = { ...t, cx: nearestCopy(t.cx) };
       if (e.reduceMotion || !ms) {
         e.view = target;
         wrapX();
@@ -246,7 +267,9 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
       if (prev) prev.classList.remove('target', 'ok', 'bad');
       const prevOutline = e.targetId && e.outlineEls.get(e.targetId);
       if (prevOutline) prevOutline.classList.remove('shown', 'ok', 'bad');
+      if (e.targetId) e.labelEls.get(e.targetId)?.classList.remove('on-target');
       e.targetId = id;
+      if (id && e.pathEls.has(id)) e.labelEls.get(id)?.classList.add('on-target');
       const el = id && e.pathEls.get(id);
       if (el) {
         land.appendChild(el);
