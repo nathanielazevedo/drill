@@ -64,8 +64,8 @@ export const CATEGORIES: CategoryDef[] = [
   {
     id: 'mandarin-sentences',
     name: 'Mandarin Sentences',
-    description: 'The 100 most useful sentences, ten at a time, each ten after its new words.',
-    size: 243,
+    description: 'The 500 most useful sentences, ten at a time, each ten after its new words.',
+    size: 964,
     Component: lazy(() =>
       import('./mandarin-sentences/MandarinSentencesCategory').then((m) => ({ default: m.MandarinSentencesCategory })),
     ),

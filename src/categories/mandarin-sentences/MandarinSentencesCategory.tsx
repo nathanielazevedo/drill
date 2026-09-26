@@ -43,39 +43,46 @@ const sentenceById = new Map(sentences.map((s) => [s.id, s]));
 const WORD = 'w:';
 const wordById = new Map(words.map((w) => [WORD + w.id, w]));
 
+// Sentences are taught in groups of ten; the home screen picks them in blocks of fifty.
 const GROUP_SIZE = 10;
-const groupOf = (i: number) => {
-  const first = Math.floor(i / GROUP_SIZE) * GROUP_SIZE + 1;
-  return `${first}–${first + GROUP_SIZE - 1}`;
+const BLOCK_SIZE = 50;
+const rangeOf = (i: number, size: number) => {
+  const first = Math.floor(i / size) * size + 1;
+  return `${first}–${Math.min(first + size - 1, sentences.length)}`;
 };
-const REGIONS = ['All', ...new Set(sentences.map((_, i) => groupOf(i)))];
+const REGIONS = ['All', ...new Set(sentences.map((_, i) => rangeOf(i, BLOCK_SIZE)))];
 
 // A run goes group by group: the group's new words, then its ten sentences. A word is taught once,
 // before the first group that uses it, with that first sentence kept as its example.
 const exampleOf = new Map<string, Sentence>();
+const groupOfTarget = new Map<string, string>();
 const targets: DrillTarget[] = [];
 for (let g = 0; g < sentences.length; g += GROUP_SIZE) {
   const group = sentences.slice(g, g + GROUP_SIZE);
-  const region = groupOf(g);
+  const region = rangeOf(g, BLOCK_SIZE);
+  const add = (t: DrillTarget) => {
+    targets.push(t);
+    groupOfTarget.set(t.id, rangeOf(g, GROUP_SIZE));
+  };
   for (const s of group) {
     for (const w of s.words) {
       const id = WORD + w;
       if (exampleOf.has(id)) continue;
       exampleOf.set(id, s);
-      targets.push({ id, name: wordById.get(id)!.en, region });
+      add({ id, name: wordById.get(id)!.en, region });
     }
   }
   // The answer shown when a run ends on a sentence is its pinyin.
-  for (const s of group) targets.push({ id: s.id, name: s.pinyin, region });
+  for (const s of group) add({ id: s.id, name: s.pinyin, region });
 }
 
 const isWord = (id: string) => id.startsWith(WORD);
 
-// Shuffle mixes up the words, and the sentences, within each group, but keeps the groups and the
-// words-then-sentences order.
-const shuffleBlock = (t: DrillTarget) => `${t.region}:${isWord(t.id) ? 'words' : 'sentences'}`;
+// Shuffle mixes up the words, and the sentences, within each group of ten, but keeps the groups and
+// the words-then-sentences order.
+const shuffleBlock = (t: DrillTarget) => `${groupOfTarget.get(t.id)}:${isWord(t.id) ? 'words' : 'sentences'}`;
 
-// A word's options are other words, from its own group first. Never one that's spelled the same
+// A word's options are other words, from its own block of fifty first. Never one that's spelled the same
 // (zài "again" and zài "at"), since the pinyin alone couldn't tell them apart.
 const wordTargets = targets.filter((t) => isWord(t.id));
 const targetById = new Map(targets.map((t) => [t.id, t]));
@@ -85,7 +92,7 @@ function drawChoices(id: string): string[] {
   return choicesFor(pool, targetById, id);
 }
 
-const copy: DrillCopy = { noun: 'card', nounPlural: 'cards', groupLabel: 'Sentences', wholeSet: 'All 100' };
+const copy: DrillCopy = { noun: 'card', nounPlural: 'cards', groupLabel: 'Sentences', wholeSet: `All ${sentences.length}` };
 
 // sentences.json is in order of usefulness: the ones you'd reach for first come first.
 const runDescription = 'Ten sentences at a time, most useful first, each ten after its new words. A miss ends the run.';
