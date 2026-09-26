@@ -28,6 +28,8 @@ one miss ends the run, and your best streak is kept per region.
 - **Mandarin Sentences** — the 500 most useful everyday sentences (about HSK 3), picked in blocks
   of a hundred, as flashcards you mark yourself: see the English, say it out loud, reveal the pinyin
   (with its recording), then Got it or Missed. Keys: Space reveals, → Got it, ← Missed.
+  Listening mode makes it hands-free: each recording plays, there's a pause to think of the English,
+  then the answer shows and it moves on. It doesn't count toward streaks.
 
 ## Run it
 

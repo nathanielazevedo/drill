@@ -128,3 +128,15 @@
     @apply font-sans;
     }
 }
+/* Mandarin Sentences listening mode: the thinking-time bar filling up */
+@keyframes listening-think {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.listening-think {
+  animation: listening-think linear forwards;
+}

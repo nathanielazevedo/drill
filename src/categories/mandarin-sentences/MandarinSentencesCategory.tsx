@@ -9,20 +9,12 @@ import { storageKeyFor } from '@/lib/drill/logic';
 import type { Phase } from '@/lib/drill/useGame';
 import { useDrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
-import audioData from './data/audio.json';
 import sentencesData from './data/sentences.json';
+import { ListeningScreen } from './ListeningScreen';
+import { hasRecording, type Sentence, speak, useHasVoice } from './speech';
 
 // Flashcards you mark yourself: see the English, say it in Mandarin, reveal, then Got it or Missed.
 // Honest marking is the whole deal, so a Missed ends the run like any wrong answer.
-
-interface Sentence {
-  id: string;
-  en: string;
-  /** what's shown: pinyin, with yī and bù marked in the tone they're said in (bú yào, yíxià) */
-  pinyin: string;
-  /** never shown; there for the recordings, and so the device's Mandarin voice reads it properly */
-  zh: string;
-}
 
 const sentences = sentencesData as Sentence[];
 const sentenceById = new Map(sentences.map((s) => [s.id, s]));
@@ -66,38 +58,7 @@ try {
 /** a pick that can't match any sentence, so the drill counts it as wrong */
 const MISSED = '';
 
-// Recordings made by scripts/generate-sentence-audio.mjs: sentence id → the Chinese it recorded (and
-// the voice). A recording only counts while the sentence still reads the same.
-const recorded = (audioData as { recorded: Record<string, { zh: string; voice: string }> }).recorded;
-const hasRecording = (s: Sentence) => recorded[s.id]?.zh === s.zh;
 const anyRecordings = sentences.some(hasRecording);
-let playing: HTMLAudioElement | null = null;
-
-function mandarinVoice(): SpeechSynthesisVoice | undefined {
-  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined;
-  return window.speechSynthesis.getVoices().find((v) => /^zh[-_]CN$/i.test(v.lang));
-}
-
-// Only with a real Mandarin voice: an English voice reading pinyin would teach the wrong sounds.
-function speak(s: Sentence) {
-  playing?.pause();
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
-  if (hasRecording(s)) {
-    playing = new Audio(`${import.meta.env.BASE_URL}audio/mandarin-sentences/${s.id}.mp3`);
-    // autoplay can be refused before the page has had a tap; the speaker button still works
-    playing.play().catch(() => {});
-    return;
-  }
-  const voice = mandarinVoice();
-  if (!voice) return;
-  const synth = window.speechSynthesis;
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(s.zh);
-  u.lang = 'zh-CN';
-  u.voice = voice;
-  u.rate = 0.85;
-  synth.speak(u);
-}
 
 // An on/off preference on this device, like reading cards aloud. It lives in localStorage beside
 // the drill's own save rather than in it.
@@ -120,18 +81,6 @@ function usePref(name: string, fallback: boolean): [boolean, (on: boolean) => vo
     }
   };
   return [on, set];
-}
-
-// Voices load late in some browsers, so check again once they arrive.
-function useHasVoice(): boolean {
-  const [has, setHas] = useState(() => !!mandarinVoice());
-  useEffect(() => {
-    if (!('speechSynthesis' in window)) return;
-    const update = () => setHas(!!mandarinVoice());
-    window.speechSynthesis.addEventListener('voiceschanged', update);
-    return () => window.speechSynthesis.removeEventListener('voiceschanged', update);
-  }, []);
-  return has;
 }
 
 function SentenceCard({
@@ -226,6 +175,7 @@ export function MandarinSentencesCategory() {
   const game = useDrillGame({ storageKey: STORAGE_KEY, targets, regions: REGIONS, ordered: true });
   const hasVoice = useHasVoice();
   const [autoplay, setAutoplay] = usePref('autoplay', true);
+  const [listening, setListening] = usePref('listening', false);
 
   // Which question has been revealed. Tied to the run's own order as well as the position, so the
   // first sentence of a new run starts hidden even though it's the same sentence at the same spot.
@@ -259,19 +209,43 @@ export function MandarinSentencesCategory() {
     <GroupHome
       game={game}
       copy={copy}
-      runDescription={game.store.shuffle ? 'Say it out loud, then check. A miss ends the run.' : runDescription}
-      settings={
-        <ToggleRow
-          label="Play audio"
-          on={autoplay}
-          onChange={setAutoplay}
-          hint={
-            hasVoice || anyRecordings
-              ? 'Read each sentence aloud when you reveal it.'
-              : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
-          }
-        />
+      runDescription={
+        listening
+          ? 'Hear each one, think of the English, then see it. Hands-free.'
+          : game.store.shuffle
+            ? 'Say it out loud, then check. A miss ends the run.'
+            : runDescription
       }
+      settings={
+        <>
+          <ToggleRow
+            label="Listening mode"
+            on={listening}
+            onChange={setListening}
+            hint="Hands-free: hear each sentence, say it in English in your head, then see the answer. No streaks."
+          />
+          <ToggleRow
+            label="Play audio"
+            on={autoplay}
+            onChange={setAutoplay}
+            hint={
+              hasVoice || anyRecordings
+                ? 'Read each sentence aloud when you reveal it.'
+                : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
+            }
+          />
+        </>
+      }
+    />
+  ) : listening && game.run ? (
+    // a fresh player for each run (Again deals a new order when Shuffle is on)
+    <ListeningScreen
+      key={game.run.order.join()}
+      sentences={game.run.order.map((id) => sentenceById.get(id)!)}
+      where={game.run.region === 'All' ? copy.wholeSet : game.run.region}
+      startAt={game.run.i}
+      onHome={game.quitToHome}
+      onAgain={game.startRun}
     />
   ) : (
     <DrillScreen
