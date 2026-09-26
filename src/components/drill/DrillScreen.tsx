@@ -21,9 +21,11 @@ interface DrillScreenProps {
   copy: DrillCopy;
   /** extra detail about the target, shown once it's been answered (when facts are on) */
   renderFacts?: (target: DrillTarget) => ReactNode;
+  /** how to answer, in place of the multiple choice (Mandarin Sentences' reveal and mark-yourself) */
+  renderControls?: (target: DrillTarget) => ReactNode;
 }
 
-export function DrillScreen({ basemap, outlines, renderStage, game, copy, renderFacts }: DrillScreenProps) {
+export function DrillScreen({ basemap, outlines, renderStage, game, copy, renderFacts, renderControls }: DrillScreenProps) {
   const { store, byId, showFacts, phase, run, target, targetId, choices, pickedId, pick, advance, quitToHome, startRun } = game;
   // During a run, the header's back arrow returns to this category's menu (the run stays saved).
   useBackOverride(quitToHome);
@@ -68,6 +70,8 @@ export function DrillScreen({ basemap, outlines, renderStage, game, copy, render
           onPlayAgain={startRun}
           onHome={quitToHome}
         />
+      ) : renderControls ? (
+        renderControls(target)
       ) : (
         <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
       )}

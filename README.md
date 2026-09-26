@@ -25,6 +25,9 @@ one miss ends the run, and your best streak is kept per region.
   map, one continent per theme, and 92 two-block words (dàrén, diànnǎo…) asked by lighting up both
   blocks with a bridge between them. Blocks that build words together are drawn near each other.
   The map is generated from `data/blocks.json` by `npm run build:mandarin-map`.
+- **Mandarin Sentences** — the 100 most useful everyday sentences as flashcards you mark yourself:
+  see the English, say it out loud, reveal the pinyin (read aloud by the device's Mandarin voice,
+  where it has one), then Got it or Missed. Keys: Space reveals, → Got it, ← Missed.
 
 ## Run it
 

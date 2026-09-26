@@ -61,4 +61,13 @@ export const CATEGORIES: CategoryDef[] = [
     size: 172,
     Component: lazy(() => import('./mandarin-map/MandarinMapCategory').then((m) => ({ default: m.MandarinMapCategory }))),
   },
+  {
+    id: 'mandarin-sentences',
+    name: 'Mandarin Sentences',
+    description: 'The 100 most useful sentences. Say each one, then check.',
+    size: 100,
+    Component: lazy(() =>
+      import('./mandarin-sentences/MandarinSentencesCategory').then((m) => ({ default: m.MandarinSentencesCategory })),
+    ),
+  },
 ];
