@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -12,9 +12,11 @@ interface GroupHomeProps {
   copy: DrillCopy;
   /** the rules line under the Start button */
   runDescription?: string;
+  /** the category's own settings, listed after the shared ones (use ToggleRow for a switch) */
+  settings?: ReactNode;
 }
 
-function ToggleRow({ label, hint, on, onChange }: { label: string; hint: string; on: boolean; onChange: (on: boolean) => void }) {
+export function ToggleRow({ label, hint, on, onChange }: { label: string; hint: string; on: boolean; onChange: (on: boolean) => void }) {
   return (
     <button
       type="button"
@@ -39,7 +41,7 @@ function ToggleRow({ label, hint, on, onChange }: { label: string; hint: string;
   );
 }
 
-export function GroupHome({ game, copy, runDescription = 'One miss ends the run.' }: GroupHomeProps) {
+export function GroupHome({ game, copy, runDescription = 'One miss ends the run.', settings }: GroupHomeProps) {
   const { store, byId, regions, hasFacts, setShowFacts, setShuffle, toggleRegion, startRun, resume, resetAll } = game;
   const [resetArmed, setResetArmed] = useState(false);
   const [startArmed, setStartArmed] = useState(false);
@@ -120,6 +122,7 @@ export function GroupHome({ game, copy, runDescription = 'One miss ends the run.
           onChange={setShuffle}
           hint="A new order every run."
         />
+        {settings}
       </div>
 
       <div className="flex flex-col gap-2">

@@ -21,7 +21,7 @@ interface DrillScreenProps {
   copy: DrillCopy;
   /** extra detail about the target, shown once it's been answered (when facts are on) */
   renderFacts?: (target: DrillTarget) => ReactNode;
-  /** how to answer, in place of the multiple choice (Mandarin Sentences' reveal and mark-yourself) */
+  /** how to answer, in place of the multiple choice (Mandarin Sentences' reveal and mark-yourself); null keeps the choices */
   renderControls?: (target: DrillTarget) => ReactNode;
 }
 
@@ -70,10 +70,10 @@ export function DrillScreen({ basemap, outlines, renderStage, game, copy, render
           onPlayAgain={startRun}
           onHome={quitToHome}
         />
-      ) : renderControls ? (
-        renderControls(target)
       ) : (
-        <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
+        (renderControls?.(target) ?? (
+          <ChoiceGrid choices={choices} byId={byId} targetId={targetId} pickedId={pickedId} locked={locked} onPick={pick} />
+        ))
       )}
 
       <RunDoneDialog
