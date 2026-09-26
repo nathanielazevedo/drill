@@ -133,36 +133,19 @@ export function saveStore(storageKey: string, store: Store): void {
   }
 }
 
-// Shuffles each run of consecutive targets that share a block, keeping the blocks in order.
-function shuffledWithinBlocks(order: string[], blockOf: (id: string) => string): string[] {
-  const out: string[] = [];
-  for (let start = 0; start < order.length; ) {
-    let end = start + 1;
-    while (end < order.length && blockOf(order[end]) === blockOf(order[start])) end++;
-    out.push(...shuffled(order.slice(start, end), Math.random));
-    start = end;
-  }
-  return out;
-}
-
 export function startRun(
   targets: DrillTarget[],
   store: Store,
   regions: readonly string[],
   ordered = false,
-  shuffleBlock?: (t: DrillTarget) => string,
 ): RunState | null {
   const ids = regionPool(targets, store.regions);
   if (!ids.length) return null;
-  const fixed = inMasterOrder(ordered ? targets.map((t) => t.id) : masterOrder(targets), ids);
-  const byId = byIdMap(targets);
   return {
     region: regionKey(store.regions, regions),
-    order: !store.shuffle
-      ? fixed
-      : shuffleBlock
-        ? shuffledWithinBlocks(fixed, (id) => shuffleBlock(byId.get(id)!))
-        : shuffled(ids, Math.random),
+    order: store.shuffle
+      ? shuffled(ids, Math.random)
+      : inMasterOrder(ordered ? targets.map((t) => t.id) : masterOrder(targets), ids),
     i: 0,
     results: {},
     correct: 0,

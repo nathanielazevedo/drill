@@ -5,122 +5,63 @@ import { GroupHome, ToggleRow } from '@/components/drill/GroupHome';
 import { Button } from '@/components/ui/button';
 import type { DrillCopy } from '@/lib/drill/copy';
 import type { DrillTarget, RunState } from '@/lib/drill/types';
-import { choicesFor, storageKeyFor } from '@/lib/drill/logic';
+import { storageKeyFor } from '@/lib/drill/logic';
 import type { Phase } from '@/lib/drill/useGame';
 import { useDrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
 import audioData from './data/audio.json';
 import sentencesData from './data/sentences.json';
-import wordsData from './data/words.json';
 
-// The sentences come in groups of ten. Before each group, its new words are asked like the Mandarin
-// category (pinyin, pick the meaning); then its sentences are flashcards you mark yourself: see the
-// English, say it in Mandarin, reveal, then Got it or Missed. Honest marking is the whole deal, so a
-// Missed ends the run like any wrong answer.
+// Flashcards you mark yourself: see the English, say it in Mandarin, reveal, then Got it or Missed.
+// Honest marking is the whole deal, so a Missed ends the run like any wrong answer.
 
 interface Sentence {
   id: string;
   en: string;
   /** what's shown: pinyin, with yī and bù marked in the tone they're said in (bú yào, yíxià) */
   pinyin: string;
-  /** never shown; only there so the device's Mandarin voice can read the sentence properly */
+  /** never shown; there for the recordings, and so the device's Mandarin voice reads it properly */
   zh: string;
-  /** its words, in order, from words.json */
-  words: string[];
-}
-
-interface Word {
-  id: string;
-  /** dictionary form (bù, yī), except set words said with the changed tone (yíxià, yìzhí) */
-  pinyin: string;
-  en: string;
 }
 
 const sentences = sentencesData as Sentence[];
-const words = wordsData as Word[];
 const sentenceById = new Map(sentences.map((s) => [s.id, s]));
 
-// Word cards get their own ids: some words are whole sentences too (xièxie, duì).
-const WORD = 'w:';
-const wordById = new Map(words.map((w) => [WORD + w.id, w]));
-
-// Sentences are taught in groups of ten; the home screen picks them in blocks of fifty.
-const GROUP_SIZE = 10;
-const BLOCK_SIZE = 50;
-const rangeOf = (i: number, size: number) => {
-  const first = Math.floor(i / size) * size + 1;
-  return `${first}–${Math.min(first + size - 1, sentences.length)}`;
+// The home screen picks sentences in blocks of a hundred.
+const BLOCK_SIZE = 100;
+const blockOf = (i: number) => {
+  const first = Math.floor(i / BLOCK_SIZE) * BLOCK_SIZE + 1;
+  return `${first}–${Math.min(first + BLOCK_SIZE - 1, sentences.length)}`;
 };
-const REGIONS = ['All', ...new Set(sentences.map((_, i) => rangeOf(i, BLOCK_SIZE)))];
+const REGIONS = ['All', ...new Set(sentences.map((_, i) => blockOf(i)))];
 
-// A run goes group by group: the group's new words, then its ten sentences. A word is taught once,
-// before the first group that uses it, with that first sentence kept as its example.
-const exampleOf = new Map<string, Sentence>();
-const groupOfTarget = new Map<string, string>();
-const targets: DrillTarget[] = [];
-for (let g = 0; g < sentences.length; g += GROUP_SIZE) {
-  const group = sentences.slice(g, g + GROUP_SIZE);
-  const region = rangeOf(g, BLOCK_SIZE);
-  const add = (t: DrillTarget) => {
-    targets.push(t);
-    groupOfTarget.set(t.id, rangeOf(g, GROUP_SIZE));
-  };
-  for (const s of group) {
-    for (const w of s.words) {
-      const id = WORD + w;
-      if (exampleOf.has(id)) continue;
-      exampleOf.set(id, s);
-      add({ id, name: wordById.get(id)!.en, region });
-    }
+// The answer shown when a run ends is the pinyin.
+const targets: DrillTarget[] = sentences.map((s, i) => ({ id: s.id, name: s.pinyin, region: blockOf(i) }));
+
+const copy: DrillCopy = { noun: 'sentence', nounPlural: 'sentences', groupLabel: 'Sentences', wholeSet: `All ${sentences.length}` };
+
+// sentences.json is in order of usefulness: the ones you'd reach for first come first.
+const runDescription = 'Most useful first. Say it out loud, then check. A miss ends the run.';
+
+const STORAGE_KEY = storageKeyFor('mandarin-sentences');
+
+// Word cards used to come before each ten sentences, with a Sentences only switch that saved its
+// progress separately. That separate save is exactly today's drill, so it becomes the save; one
+// that counted word cards doesn't compare with sentence-only streaks, so it goes.
+try {
+  const ONLY_KEY = storageKeyFor('mandarin-sentences-only');
+  const DONE_KEY = `${STORAGE_KEY}.no-word-cards`;
+  if (!localStorage.getItem(DONE_KEY)) {
+    const onlySave = localStorage.getItem(ONLY_KEY);
+    if (onlySave) localStorage.setItem(STORAGE_KEY, onlySave);
+    else localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(ONLY_KEY);
+    localStorage.removeItem(`${STORAGE_KEY}.sentences-only`);
+    localStorage.setItem(DONE_KEY, '1');
   }
-  // The answer shown when a run ends on a sentence is its pinyin.
-  for (const s of group) add({ id: s.id, name: s.pinyin, region });
+} catch {
+  // storage blocked: nothing saved to move
 }
-
-const isWord = (id: string) => id.startsWith(WORD);
-
-// Shuffle mixes up the words, and the sentences, within each group of ten, but keeps the groups and
-// the words-then-sentences order.
-const shuffleBlock = (t: DrillTarget) => `${groupOfTarget.get(t.id)}:${isWord(t.id) ? 'words' : 'sentences'}`;
-
-// A word's options are other words, from its own block of fifty first. Never one that's spelled the same
-// (zài "again" and zài "at"), since the pinyin alone couldn't tell them apart.
-const wordTargets = targets.filter((t) => isWord(t.id));
-const targetById = new Map(targets.map((t) => [t.id, t]));
-function drawChoices(id: string): string[] {
-  const pinyin = wordById.get(id)?.pinyin;
-  const pool = wordTargets.filter((t) => t.id === id || wordById.get(t.id)!.pinyin !== pinyin);
-  return choicesFor(pool, targetById, id);
-}
-
-// Two ways to drill, each with its own saved run and best streaks, so a streak through bare
-// sentences isn't compared with one padded out by word cards. sentences.json is in order of
-// usefulness: the ones you'd reach for first come first.
-interface Mode {
-  storageKey: string;
-  targets: DrillTarget[];
-  copy: DrillCopy;
-  runDescription: string;
-  shuffledDescription: string;
-}
-
-const wholeSet = `All ${sentences.length}`;
-
-const WITH_WORDS: Mode = {
-  storageKey: storageKeyFor('mandarin-sentences'),
-  targets,
-  copy: { noun: 'card', nounPlural: 'cards', groupLabel: 'Sentences', wholeSet },
-  runDescription: 'Ten sentences at a time, most useful first, each ten after its new words. A miss ends the run.',
-  shuffledDescription: 'Ten sentences at a time, each ten after its new words, mixed up within each. A miss ends the run.',
-};
-
-const SENTENCES_ONLY: Mode = {
-  storageKey: storageKeyFor('mandarin-sentences-only'),
-  targets: targets.filter((t) => !isWord(t.id)),
-  copy: { noun: 'sentence', nounPlural: 'sentences', groupLabel: 'Sentences', wholeSet },
-  runDescription: 'Just the sentences, most useful first. A miss ends the run.',
-  shuffledDescription: 'Just the sentences, mixed up ten at a time. A miss ends the run.',
-};
 
 /** a pick that can't match any sentence, so the drill counts it as wrong */
 const MISSED = '';
@@ -235,26 +176,6 @@ function SentenceCard({
   );
 }
 
-function WordCard({ word, example, outcome }: { word: Word; example: Sentence; outcome: 'ok' | 'bad' | null }) {
-  return (
-    <div
-      className={cn(
-        'flex min-h-56 flex-col items-center justify-center gap-2 rounded-2xl border bg-muted/40 px-4 py-8 text-center transition-colors',
-        outcome === 'ok' && 'border-emerald-600',
-        outcome === 'bad' && 'border-red-600',
-      )}
-    >
-      <div className="text-sm text-muted-foreground">New word · what does it mean?</div>
-      <div lang="zh-Latn-pinyin" className="text-5xl font-semibold tracking-tight">
-        {word.pinyin}
-      </div>
-      <div className="mt-2 text-sm text-muted-foreground">
-        as in <span lang="zh-Latn-pinyin">{example.pinyin}</span>
-      </div>
-    </div>
-  );
-}
-
 function Controls({
   phase,
   revealed,
@@ -302,35 +223,7 @@ function Controls({
 }
 
 export function MandarinSentencesCategory() {
-  const [sentencesOnly, setSentencesOnly] = usePref('sentences-only', false);
-  // A fresh drill per mode, since each has its own targets and save.
-  return (
-    <SentencesDrill
-      key={sentencesOnly ? 'sentences-only' : 'with-words'}
-      mode={sentencesOnly ? SENTENCES_ONLY : WITH_WORDS}
-      sentencesOnly={sentencesOnly}
-      setSentencesOnly={setSentencesOnly}
-    />
-  );
-}
-
-function SentencesDrill({
-  mode,
-  sentencesOnly,
-  setSentencesOnly,
-}: {
-  mode: Mode;
-  sentencesOnly: boolean;
-  setSentencesOnly: (on: boolean) => void;
-}) {
-  const game = useDrillGame({
-    storageKey: mode.storageKey,
-    targets: mode.targets,
-    regions: REGIONS,
-    ordered: true,
-    shuffleBlock,
-    drawChoices,
-  });
+  const game = useDrillGame({ storageKey: STORAGE_KEY, targets, regions: REGIONS, ordered: true });
   const hasVoice = useHasVoice();
   const [autoplay, setAutoplay] = usePref('autoplay', true);
 
@@ -347,9 +240,9 @@ function SentencesDrill({
     if (autoplay) speak(sentenceById.get(game.target.id)!);
   };
 
-  // On a sentence: Space reveals; then → for Got it, ← for Missed.
+  // Space reveals; then → for Got it, ← for Missed.
   useEffect(() => {
-    if (game.screen !== 'game' || game.phase !== 'asking' || !game.targetId || isWord(game.targetId)) return;
+    if (game.screen !== 'game' || game.phase !== 'asking' || !game.targetId) return;
     const onKey = (ev: KeyboardEvent) => {
       if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
       if (!revealed && (ev.key === ' ' || ev.key === 'Enter')) {
@@ -365,42 +258,29 @@ function SentencesDrill({
   return game.screen === 'home' ? (
     <GroupHome
       game={game}
-      copy={mode.copy}
-      runDescription={game.store.shuffle ? mode.shuffledDescription : mode.runDescription}
+      copy={copy}
+      runDescription={game.store.shuffle ? 'Say it out loud, then check. A miss ends the run.' : runDescription}
       settings={
-        <>
-          <ToggleRow
-            label="Sentences only"
-            on={sentencesOnly}
-            onChange={setSentencesOnly}
-            hint="Skip the word cards. Keeps its own best streaks."
-          />
-          <ToggleRow
-            label="Play audio"
-            on={autoplay}
-            onChange={setAutoplay}
-            hint={
-              hasVoice || anyRecordings
-                ? 'Read each sentence aloud when you reveal it.'
-                : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
-            }
-          />
-        </>
+        <ToggleRow
+          label="Play audio"
+          on={autoplay}
+          onChange={setAutoplay}
+          hint={
+            hasVoice || anyRecordings
+              ? 'Read each sentence aloud when you reveal it.'
+              : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
+          }
+        />
       }
     />
   ) : (
     <DrillScreen
       game={game}
-      copy={mode.copy}
-      renderStage={(t, outcome) =>
-        isWord(t.id) ? (
-          <WordCard word={wordById.get(t.id)!} example={exampleOf.get(t.id)!} outcome={outcome} />
-        ) : (
-          <SentenceCard sentence={sentenceById.get(t.id)!} revealed={revealed} outcome={outcome} hasVoice={hasVoice} />
-        )
-      }
-      // words keep the usual multiple choice
-      renderControls={(t) => (isWord(t.id) ? null : (
+      copy={copy}
+      renderStage={(t, outcome) => (
+        <SentenceCard sentence={sentenceById.get(t.id)!} revealed={revealed} outcome={outcome} hasVoice={hasVoice} />
+      )}
+      renderControls={(t) => (
         <Controls
           phase={game.phase}
           revealed={revealed}
@@ -408,7 +288,7 @@ function SentencesDrill({
           onGotIt={() => game.pick(t.id)}
           onMissed={() => game.pick(MISSED)}
         />
-      ))}
+      )}
     />
   );
 }

@@ -65,7 +65,6 @@ function reducer(
   targets: DrillTarget[],
   regions: readonly string[],
   ordered: boolean,
-  shuffleBlock: ((t: DrillTarget) => string) | undefined,
   state: GameState,
   action: Action,
 ): GameState {
@@ -80,7 +79,7 @@ function reducer(
       return { ...state, store: { ...state.store, shuffle: action.on } };
 
     case 'startRun': {
-      const run = buildRun(targets, state.store, regions, ordered, shuffleBlock);
+      const run = buildRun(targets, state.store, regions, ordered);
       if (!run) return state;
       // Not saved for resuming until the first answer: leaving straight away shouldn't leave a "Continue 0 of 50".
       return {
@@ -145,25 +144,13 @@ export interface DrillConfig {
   hasFacts?: boolean;
   /** ask targets in the order given (e.g. presidents 1, 2, 3...) instead of a fixed shuffle. */
   ordered?: boolean;
-  /** with Shuffle on, only shuffle within each block (targets in a row with the same key), not the whole run */
-  shuffleBlock?: (t: DrillTarget) => string;
-  /** the multiple-choice options for a target, when the category draws them itself */
-  drawChoices?: (id: string) => string[];
 }
 
-export function useDrillGame({
-  storageKey,
-  targets,
-  regions,
-  hasFacts = false,
-  ordered = false,
-  shuffleBlock,
-  drawChoices,
-}: DrillConfig) {
+export function useDrillGame({ storageKey, targets, regions, hasFacts = false, ordered = false }: DrillConfig) {
   const byId = useMemo<Map<string, DrillTarget>>(() => byIdMap(targets), [targets]);
 
   const [state, dispatch] = useReducer(
-    (s: GameState, a: Action) => reducer(targets, regions, ordered, shuffleBlock, s, a),
+    (s: GameState, a: Action) => reducer(targets, regions, ordered, s, a),
     targets,
     (t) => {
       const store = loadStore(storageKey, t, regions);
@@ -192,7 +179,7 @@ export function useDrillGame({
   // `order` array; within a run it's carried along unchanged, so answering doesn't reshuffle).
   const order = run?.order;
   const choices = useMemo(
-    () => (targetId ? (drawChoices ? drawChoices(targetId) : choicesFor(targets, byId, targetId)) : []),
+    () => (targetId ? choicesFor(targets, byId, targetId) : []),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `order` only marks a new run
     [targets, byId, targetId, order],
   );
