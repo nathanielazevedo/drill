@@ -92,10 +92,34 @@ function drawChoices(id: string): string[] {
   return choicesFor(pool, targetById, id);
 }
 
-const copy: DrillCopy = { noun: 'card', nounPlural: 'cards', groupLabel: 'Sentences', wholeSet: `All ${sentences.length}` };
+// Two ways to drill, each with its own saved run and best streaks, so a streak through bare
+// sentences isn't compared with one padded out by word cards. sentences.json is in order of
+// usefulness: the ones you'd reach for first come first.
+interface Mode {
+  storageKey: string;
+  targets: DrillTarget[];
+  copy: DrillCopy;
+  runDescription: string;
+  shuffledDescription: string;
+}
 
-// sentences.json is in order of usefulness: the ones you'd reach for first come first.
-const runDescription = 'Ten sentences at a time, most useful first, each ten after its new words. A miss ends the run.';
+const wholeSet = `All ${sentences.length}`;
+
+const WITH_WORDS: Mode = {
+  storageKey: storageKeyFor('mandarin-sentences'),
+  targets,
+  copy: { noun: 'card', nounPlural: 'cards', groupLabel: 'Sentences', wholeSet },
+  runDescription: 'Ten sentences at a time, most useful first, each ten after its new words. A miss ends the run.',
+  shuffledDescription: 'Ten sentences at a time, each ten after its new words, mixed up within each. A miss ends the run.',
+};
+
+const SENTENCES_ONLY: Mode = {
+  storageKey: storageKeyFor('mandarin-sentences-only'),
+  targets: targets.filter((t) => !isWord(t.id)),
+  copy: { noun: 'sentence', nounPlural: 'sentences', groupLabel: 'Sentences', wholeSet },
+  runDescription: 'Just the sentences, most useful first. A miss ends the run.',
+  shuffledDescription: 'Just the sentences, mixed up ten at a time. A miss ends the run.',
+};
 
 /** a pick that can't match any sentence, so the drill counts it as wrong */
 const MISSED = '';
@@ -118,22 +142,22 @@ function speak(s: Sentence) {
   synth.speak(u);
 }
 
-// Whether revealing a card reads it aloud. Just a preference on this device, so it lives in
-// localStorage beside the drill's own save rather than in it.
-const AUTOPLAY_KEY = `${storageKeyFor('mandarin-sentences')}.autoplay`;
-
-function useAutoplay(): [boolean, (on: boolean) => void] {
+// An on/off preference on this device, like reading cards aloud. It lives in localStorage beside
+// the drill's own save rather than in it.
+function usePref(name: string, fallback: boolean): [boolean, (on: boolean) => void] {
+  const key = `${storageKeyFor('mandarin-sentences')}.${name}`;
   const [on, setOn] = useState(() => {
     try {
-      return localStorage.getItem(AUTOPLAY_KEY) !== 'off';
+      const saved = localStorage.getItem(key);
+      return saved === null ? fallback : saved === 'on';
     } catch {
-      return true;
+      return fallback;
     }
   });
   const set = (next: boolean) => {
     setOn(next);
     try {
-      localStorage.setItem(AUTOPLAY_KEY, next ? 'on' : 'off');
+      localStorage.setItem(key, next ? 'on' : 'off');
     } catch {
       // storage blocked: the setting just won't stick
     }
@@ -262,16 +286,37 @@ function Controls({
 }
 
 export function MandarinSentencesCategory() {
+  const [sentencesOnly, setSentencesOnly] = usePref('sentences-only', false);
+  // A fresh drill per mode, since each has its own targets and save.
+  return (
+    <SentencesDrill
+      key={sentencesOnly ? 'sentences-only' : 'with-words'}
+      mode={sentencesOnly ? SENTENCES_ONLY : WITH_WORDS}
+      sentencesOnly={sentencesOnly}
+      setSentencesOnly={setSentencesOnly}
+    />
+  );
+}
+
+function SentencesDrill({
+  mode,
+  sentencesOnly,
+  setSentencesOnly,
+}: {
+  mode: Mode;
+  sentencesOnly: boolean;
+  setSentencesOnly: (on: boolean) => void;
+}) {
   const game = useDrillGame({
-    storageKey: storageKeyFor('mandarin-sentences'),
-    targets,
+    storageKey: mode.storageKey,
+    targets: mode.targets,
     regions: REGIONS,
     ordered: true,
     shuffleBlock,
     drawChoices,
   });
   const hasVoice = useHasVoice();
-  const [autoplay, setAutoplay] = useAutoplay();
+  const [autoplay, setAutoplay] = usePref('autoplay', true);
 
   // Which question has been revealed. Tied to the run's own order as well as the position, so the
   // first sentence of a new run starts hidden even though it's the same sentence at the same spot.
@@ -304,27 +349,33 @@ export function MandarinSentencesCategory() {
   return game.screen === 'home' ? (
     <GroupHome
       game={game}
-      copy={copy}
-      runDescription={
-        game.store.shuffle ? 'Ten sentences at a time, each ten after its new words, mixed up within each. A miss ends the run.' : runDescription
-      }
+      copy={mode.copy}
+      runDescription={game.store.shuffle ? mode.shuffledDescription : mode.runDescription}
       settings={
-        <ToggleRow
-          label="Play audio"
-          on={autoplay}
-          onChange={setAutoplay}
-          hint={
-            hasVoice
-              ? 'Read each sentence aloud when you reveal it.'
-              : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
-          }
-        />
+        <>
+          <ToggleRow
+            label="Sentences only"
+            on={sentencesOnly}
+            onChange={setSentencesOnly}
+            hint="Skip the word cards. Keeps its own best streaks."
+          />
+          <ToggleRow
+            label="Play audio"
+            on={autoplay}
+            onChange={setAutoplay}
+            hint={
+              hasVoice
+                ? 'Read each sentence aloud when you reveal it.'
+                : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
+            }
+          />
+        </>
       }
     />
   ) : (
     <DrillScreen
       game={game}
-      copy={copy}
+      copy={mode.copy}
       renderStage={(t, outcome) =>
         isWord(t.id) ? (
           <WordCard word={wordById.get(t.id)!} example={exampleOf.get(t.id)!} outcome={outcome} />
