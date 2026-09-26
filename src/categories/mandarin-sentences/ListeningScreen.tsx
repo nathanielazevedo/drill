@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useBackOverride } from '@/lib/back';
 import { cn } from '@/lib/utils';
-import { type Sentence, speak, stopSpeaking } from './speech';
+import { type Sentence, speak, stopSpeaking, unlockAudio } from './speech';
 
 // Listening mode: hands-free. Each sentence plays, there's a pause to say it in English in your head,
 // then the answer shows before moving on. Nothing is marked, so it doesn't touch streaks.
@@ -68,6 +68,7 @@ export function ListeningScreen({ sentences, where, startAt = 0, onHome, onAgain
   useEffect(() => stopSpeaking, []);
 
   const replay = () => {
+    unlockAudio();
     setPaused(false);
     setStage('playing');
     setTake((t) => t + 1);
@@ -146,7 +147,14 @@ export function ListeningScreen({ sentences, where, startAt = 0, onHome, onAgain
           <RotateCcw />
           Replay
         </Button>
-        <Button type="button" className="h-12" onClick={() => setPaused((p) => !p)}>
+        <Button
+          type="button"
+          className="h-12"
+          onClick={() => {
+            unlockAudio();
+            setPaused((p) => !p);
+          }}
+        >
           {paused ? <Play /> : <Pause />}
           {paused ? 'Resume' : 'Pause'}
         </Button>
@@ -155,6 +163,7 @@ export function ListeningScreen({ sentences, where, startAt = 0, onHome, onAgain
           variant="outline"
           className="h-12"
           onClick={() => {
+            unlockAudio();
             setPaused(false);
             next();
           }}

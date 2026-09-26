@@ -11,7 +11,7 @@ import { useDrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
 import sentencesData from './data/sentences.json';
 import { ListeningScreen } from './ListeningScreen';
-import { hasRecording, type Sentence, speak, useHasVoice } from './speech';
+import { hasRecording, type Sentence, speak, unlockAudio, useHasVoice } from './speech';
 
 // Flashcards you mark yourself: see the English, say it in Mandarin, reveal, then Got it or Missed.
 // Honest marking is the whole deal, so a Missed ends the run like any wrong answer.
@@ -207,7 +207,23 @@ export function MandarinSentencesCategory() {
 
   return game.screen === 'home' ? (
     <GroupHome
-      game={game}
+      // In listening mode the sentences then play by themselves, so the Start (or Resume) tap has to
+      // unlock sound for them.
+      game={
+        listening
+          ? {
+              ...game,
+              startRun: () => {
+                unlockAudio();
+                game.startRun();
+              },
+              resume: () => {
+                unlockAudio();
+                game.resume();
+              },
+            }
+          : game
+      }
       copy={copy}
       runDescription={
         listening
