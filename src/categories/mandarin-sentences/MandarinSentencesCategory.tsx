@@ -9,6 +9,7 @@ import { choicesFor, storageKeyFor } from '@/lib/drill/logic';
 import type { Phase } from '@/lib/drill/useGame';
 import { useDrillGame } from '@/lib/drill/useGame';
 import { cn } from '@/lib/utils';
+import audioData from './data/audio.json';
 import sentencesData from './data/sentences.json';
 import wordsData from './data/words.json';
 
@@ -124,6 +125,13 @@ const SENTENCES_ONLY: Mode = {
 /** a pick that can't match any sentence, so the drill counts it as wrong */
 const MISSED = '';
 
+// Recordings made by scripts/generate-sentence-audio.mjs: sentence id → the Chinese it recorded (and
+// the voice). A recording only counts while the sentence still reads the same.
+const recorded = (audioData as { recorded: Record<string, { zh: string; voice: string }> }).recorded;
+const hasRecording = (s: Sentence) => recorded[s.id]?.zh === s.zh;
+const anyRecordings = sentences.some(hasRecording);
+let playing: HTMLAudioElement | null = null;
+
 function mandarinVoice(): SpeechSynthesisVoice | undefined {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return undefined;
   return window.speechSynthesis.getVoices().find((v) => /^zh[-_]CN$/i.test(v.lang));
@@ -131,6 +139,14 @@ function mandarinVoice(): SpeechSynthesisVoice | undefined {
 
 // Only with a real Mandarin voice: an English voice reading pinyin would teach the wrong sounds.
 function speak(s: Sentence) {
+  playing?.pause();
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+  if (hasRecording(s)) {
+    playing = new Audio(`${import.meta.env.BASE_URL}audio/mandarin-sentences/${s.id}.mp3`);
+    // autoplay can be refused before the page has had a tap; the speaker button still works
+    playing.play().catch(() => {});
+    return;
+  }
   const voice = mandarinVoice();
   if (!voice) return;
   const synth = window.speechSynthesis;
@@ -203,7 +219,7 @@ function SentenceCard({
           <span lang="zh-Latn-pinyin" className="text-2xl font-medium text-balance">
             {sentence.pinyin}
           </span>
-          {hasVoice && (
+          {(hasVoice || hasRecording(sentence)) && (
             <button
               type="button"
               onClick={() => speak(sentence)}
@@ -364,7 +380,7 @@ function SentencesDrill({
             on={autoplay}
             onChange={setAutoplay}
             hint={
-              hasVoice
+              hasVoice || anyRecordings
                 ? 'Read each sentence aloud when you reveal it.'
                 : "Read each sentence aloud when you reveal it. This device has no Mandarin voice, so there's nothing to play."
             }

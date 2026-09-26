@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OpenAI voice samples for the voice lab (npm run generate:sentence-audio -- --sample)
+.voice-samples

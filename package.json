@@ -13,6 +13,7 @@
     "build:china-data": "node scripts/build-admin1-data.mjs china",
     "build:us-data": "node scripts/build-admin1-data.mjs us",
     "build:mandarin-map": "node scripts/build-mandarin-map.mjs",
+    "generate:sentence-audio": "node --env-file-if-exists=.env.local scripts/generate-sentence-audio.mjs",
     "fetch:portraits": "node scripts/fetch-president-portraits.mjs"
   },
   "dependencies": {

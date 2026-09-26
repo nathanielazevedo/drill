@@ -1,0 +1,2504 @@
+{
+  "recorded": {
+    "ni-hao": {
+      "zh": "你好。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xiexie": {
+      "zh": "谢谢。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ting-bu-dong": {
+      "zh": "我听不懂。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-shuo": {
+      "zh": "再说一遍？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shuo-man": {
+      "zh": "慢点说。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-haoyisi": {
+      "zh": "不好意思。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duo-shao-qian": {
+      "zh": "这个多少钱？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "cesuo": {
+      "zh": "厕所在哪儿？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yao-zhege": {
+      "zh": "我要这个。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-yong-le": {
+      "zh": "不用了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-de": {
+      "zh": "好的。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-zhidao": {
+      "zh": "不知道。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-shi-shenme": {
+      "zh": "这是什么？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duibuqi": {
+      "zh": "对不起。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-shi-mei-shi": {
+      "zh": "没事没事。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-wenti": {
+      "zh": "没问题。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dui": {
+      "zh": "对。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-shi": {
+      "zh": "不是。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shuo-yingyu": {
+      "zh": "你会说英语吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yidian-zhongwen": {
+      "zh": "我只会说一点点中文。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zenme-shuo": {
+      "zh": "这个用中文怎么说？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shenme-yisi": {
+      "zh": "什么意思？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "qingwen": {
+      "zh": "请问一下。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "baibai": {
+      "zh": "拜拜！",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zuijin": {
+      "zh": "最近怎么样？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ting-hao": {
+      "zh": "挺好的。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-ne": {
+      "zh": "你呢？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jiao-shenme": {
+      "zh": "你叫什么名字？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "renshi-ni": {
+      "zh": "很高兴认识你。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "na-guo-ren": {
+      "zh": "你是哪国人？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "meiguo-ren": {
+      "zh": "我是美国人。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi-ma": {
+      "zh": "可以吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi": {
+      "zh": "可以。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "deng-yixia": {
+      "zh": "等一下。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xiang-he-shui": {
+      "zh": "我想喝水。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "fuwuyuan": {
+      "zh": "服务员！",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "maidan": {
+      "zh": "买单。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hen-haochi": {
+      "zh": "太好吃了！",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-yao-la": {
+      "zh": "不要辣。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-chi-rou": {
+      "zh": "我不吃肉。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kafei": {
+      "zh": "我要一杯咖啡。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "liang-ge": {
+      "zh": "我要两个。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dabao": {
+      "zh": "帮我打包一下。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-gui": {
+      "zh": "太贵了。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "pianyi": {
+      "zh": "能便宜点吗？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "saoma": {
+      "zh": "可以扫码吗？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kankan": {
+      "zh": "我就看看。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bie-de": {
+      "zh": "有没有别的？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "qu-zheli": {
+      "zh": "去这儿。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ditie": {
+      "zh": "地铁站在哪儿？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yuan-ma": {
+      "zh": "远不远？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zuo-guai": {
+      "zh": "往左拐。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-guai": {
+      "zh": "往右拐。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yizhi-zou": {
+      "zh": "一直走。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zheli-ting": {
+      "zh": "就停这儿吧。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "milu": {
+      "zh": "我迷路了。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zai-nali": {
+      "zh": "你在哪儿？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mashang-dao": {
+      "zh": "我马上到。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-dao-le": {
+      "zh": "我到了。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zou-ba": {
+      "zh": "走吧。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jiuming": {
+      "zh": "救命！",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bang-wo": {
+      "zh": "能帮我一下吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-shufu": {
+      "zh": "我不舒服。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jiuhuche": {
+      "zh": "快叫救护车！",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "e-le": {
+      "zh": "我饿死了。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ke-le": {
+      "zh": "我渴了。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "lei-le": {
+      "zh": "好累啊。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xihuan-zhege": {
+      "zh": "我喜欢这个。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-xihuan": {
+      "zh": "我不喜欢。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-hui": {
+      "zh": "我不会。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wang-le": {
+      "zh": "我忘了。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mingbai-le": {
+      "zh": "明白了。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xie-xialai": {
+      "zh": "能写下来吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xue-zhongwen": {
+      "zh": "我在学中文。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xianzai-ji-dian": {
+      "zh": "现在几点了？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mingtian-jian": {
+      "zh": "明天见。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-kong": {
+      "zh": "你什么时候有空？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zuo-shenme": {
+      "zh": "你在干嘛？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhu-zai-nali": {
+      "zh": "你住哪儿？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "gongzuo": {
+      "zh": "你做什么工作？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xiang-chi-shenme": {
+      "zh": "你想吃什么？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "pengyou": {
+      "zh": "这是我的朋友。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhende-ma": {
+      "zh": "真的假的？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ye-shi": {
+      "zh": "我也是。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dangran": {
+      "zh": "当然了。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-hao-le": {
+      "zh": "太好了！",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "suan-le": {
+      "zh": "算了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shuo-de-dui": {
+      "zh": "你说得对。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "weishenme": {
+      "zh": "为什么？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zenme-le": {
+      "zh": "怎么了？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-shi": {
+      "zh": "我没事。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "meiyou-meiyou": {
+      "zh": "没有没有。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "weixin": {
+      "zh": "加个微信吧。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-dian": {
+      "zh": "我的手机没电了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "manman-lai": {
+      "zh": "慢慢来。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xiaoxin": {
+      "zh": "小心！",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jiayou": {
+      "zh": "加油！",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ganbei": {
+      "zh": "干杯！",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zao": {
+      "zh": "早！",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wanan": {
+      "zh": "晚安。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "haojiu-bu-jian": {
+      "zh": "好久不见！",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-keqi": {
+      "zh": "不客气。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-duo-da-le": {
+      "zh": "你多大了？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ershiwu-sui": {
+      "zh": "我二十五岁。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-jiehun-le-ma": {
+      "zh": "你结婚了吗？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-you-haizi-ma": {
+      "zh": "你有孩子吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-laojia-shi-nar-de": {
+      "zh": "你老家是哪儿的？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-zher-gongzuo": {
+      "zh": "我在这儿工作。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-lai-zhongguo-duo-jiu-le": {
+      "zh": "你来中国多久了？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-lai-le-san-ge-yue-le": {
+      "zh": "我来了三个月了。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-ba": {
+      "zh": "好吧。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xing": {
+      "zh": "行。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "suibian": {
+      "zh": "随便。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dou-keyi": {
+      "zh": "都可以。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hai-xing": {
+      "zh": "还行。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "chabuduo": {
+      "zh": "差不多。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shi-ma": {
+      "zh": "是吗？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-hui-ba": {
+      "zh": "不会吧！",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-banfa": {
+      "zh": "没办法。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-juede-bucuo": {
+      "zh": "我觉得不错。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xiang-qu": {
+      "zh": "我想去。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-bu-xiang-qu": {
+      "zh": "我不想去。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-yao-bu-yao": {
+      "zh": "你要不要？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "gei-wo-ba": {
+      "zh": "给我吧。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-lai-ba": {
+      "zh": "我来吧。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-xian-zou-ba": {
+      "zh": "你先走吧。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-youdianr-lei": {
+      "zh": "我有点儿累。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-kun-le": {
+      "zh": "我困了。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xiang-xiuxi-yixia": {
+      "zh": "我想休息一下。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qu-xishoujian": {
+      "zh": "我去洗手间。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qichuang-le": {
+      "zh": "我起床了。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yao-shuijiao-le": {
+      "zh": "我要睡觉了。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shui-le-ma": {
+      "zh": "你睡了吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-lushang": {
+      "zh": "我在路上。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-chumen-le": {
+      "zh": "我出门了。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-huilai-le": {
+      "zh": "我回来了！",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-zuo-fan": {
+      "zh": "我在做饭。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-xizao": {
+      "zh": "我在洗澡。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-kan-dianshi": {
+      "zh": "我在看电视。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qu-mai-dianr-dongxi": {
+      "zh": "我去买点儿东西。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-chifan-le-ma": {
+      "zh": "你吃饭了吗？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-chi-guo-le": {
+      "zh": "我吃过了。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-qu-chifan-ba": {
+      "zh": "我们去吃饭吧。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhege-la-bu-la": {
+      "zh": "这个辣不辣？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yao-yi-wan-mian": {
+      "zh": "我要一碗面。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-lai-yi-ping-pijiu": {
+      "zh": "再来一瓶啤酒。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-chi-bao-le": {
+      "zh": "我吃饱了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-shenme-tuijian-de": {
+      "zh": "有什么推荐的？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-dui-huasheng-guomin": {
+      "zh": "我对花生过敏。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-shi-shenme-rou": {
+      "zh": "这是什么肉？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duoshao-qian-yi-jin": {
+      "zh": "多少钱一斤？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yigong-duoshao-qian": {
+      "zh": "一共多少钱？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shi-kuai-qian": {
+      "zh": "十块钱。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-duo-le": {
+      "zh": "太多了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-xiao-yidianr-de-ma": {
+      "zh": "有小一点儿的吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-da-yidianr-de-ma": {
+      "zh": "有大一点儿的吗？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-keyi-shishi-ma": {
+      "zh": "我可以试试吗？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jiu-zhege-ba": {
+      "zh": "就这个吧。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "neng-yong-xianjin-ma": {
+      "zh": "能用现金吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-meiyou-lingqian": {
+      "zh": "我没有零钱。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-jintian-mang-ma": {
+      "zh": "你今天忙吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-jintian-hen-mang": {
+      "zh": "我今天很忙。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zhoumo-gan-ma": {
+      "zh": "你周末干嘛？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-ji-dian-jian": {
+      "zh": "我们几点见？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "san-dian-keyi-ma": {
+      "zh": "三点可以吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-wan-yidianr-dao": {
+      "zh": "我晚一点儿到。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duibuqi-wo-lai-wan-le": {
+      "zh": "对不起，我来晚了。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zuotian-wo-mei-qu": {
+      "zh": "昨天我没去。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-ci-ba": {
+      "zh": "下次吧。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-mingtian-zai-shuo-ba": {
+      "zh": "我们明天再说吧。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dache-qu-ba": {
+      "zh": "打车去吧。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shifu-qu-jichang": {
+      "zh": "师傅，去机场。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yao-duo-chang-shijian": {
+      "zh": "要多长时间？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-nar-xia-che": {
+      "zh": "在哪儿下车？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-che-qu-huochezhan-ma": {
+      "zh": "这车去火车站吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yao-mai-yi-zhang-piao": {
+      "zh": "我要买一张票。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "qianmian-ting-yixia": {
+      "zh": "前面停一下。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dao-le-ma": {
+      "zh": "到了吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duche-le": {
+      "zh": "堵车了。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-kuai-dao-le": {
+      "zh": "我快到了。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shuo-shenme": {
+      "zh": "你说什么？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-mei-ting-qingchu": {
+      "zh": "我没听清楚。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "rang-wo-xiangxiang": {
+      "zh": "让我想想。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zenme-shuo-ne": {
+      "zh": "怎么说呢……",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-de-yisi-shi": {
+      "zh": "我的意思是……",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-dong-wo-de-yisi-ma": {
+      "zh": "你懂我的意思吗？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhege-zi-zenme-du": {
+      "zh": "这个字怎么读？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shuo-de-tai-kuai-le": {
+      "zh": "你说得太快了。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhege-zhongwen-jiao-shenme": {
+      "zh": "这个中文叫什么？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dui-jiu-shi-zhege-yisi": {
+      "zh": "对，就是这个意思。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-hen-kaixin": {
+      "zh": "我很开心。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-wuliao-le": {
+      "zh": "太无聊了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "haowanr-ma": {
+      "zh": "好玩儿吗？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-bu-tai-xihuan": {
+      "zh": "我不太喜欢。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-juede-zenmeyang": {
+      "zh": "你觉得怎么样？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ye-zheme-juede": {
+      "zh": "我也这么觉得。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bie-danxin": {
+      "zh": "别担心。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bie-shengqi": {
+      "zh": "别生气。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-youdianr-jinzhang": {
+      "zh": "我有点儿紧张。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-bang-le": {
+      "zh": "太棒了！",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-shi-shei": {
+      "zh": "他是谁？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-shi-wo-tongshi": {
+      "zh": "她是我同事。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-renshi-ta-ma": {
+      "zh": "你认识他吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tamen-qu-nar-le": {
+      "zh": "他们去哪儿了？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-juede-ta-shuo-de-dui": {
+      "zh": "我觉得他说得对。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-ren-hen-hao": {
+      "zh": "他人很好。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-shi-wo-zui-hao-de-pengyou": {
+      "zh": "她是我最好的朋友。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-zenme-hai-mei-lai": {
+      "zh": "他怎么还没来？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dajia-hao": {
+      "zh": "大家好！",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zhang-de-xiang-ni-mama": {
+      "zh": "你长得像你妈妈。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-gei-ni-da-dianhua": {
+      "zh": "我给你打电话。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-dianhua-duoshao": {
+      "zh": "你电话多少？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-fa-gei-ni": {
+      "zh": "我发给你。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shoudao-le-ma": {
+      "zh": "你收到了吗？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-chongdianqi-ma": {
+      "zh": "有充电器吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wifi-mima-shi-duoshao": {
+      "zh": "WiFi密码是多少？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-shouji-kuai-mei-dian-le": {
+      "zh": "我手机快没电了。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "weixin-shang-shuo-ba": {
+      "zh": "微信上说吧。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-wan-dianr-hui-ni": {
+      "zh": "我晚点儿回你。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-pai-zhang-zhaopian": {
+      "zh": "我拍张照片。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yiqi-chi-ge-fan-ba": {
+      "zh": "一起吃个饭吧。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-you-shijian-ma": {
+      "zh": "你有时间吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qing-ni": {
+      "zh": "我请你。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-ci-wo-qing": {
+      "zh": "下次我请。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-qu-ma": {
+      "zh": "你去吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-zai-nar-jian": {
+      "zh": "我们在哪儿见？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-dao-le-gaosu-ni": {
+      "zh": "我到了告诉你。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wanr-de-kaixin": {
+      "zh": "玩儿得开心！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "lushang-xiaoxin": {
+      "zh": "路上小心。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dao-jia-le-gaosu-wo": {
+      "zh": "到家了告诉我。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-shi-wo-mama": {
+      "zh": "这是我妈妈。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-baba-shi-laoshi": {
+      "zh": "我爸爸是老师。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-you-xiongdi-jiemei-ma": {
+      "zh": "你有兄弟姐妹吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-you-yi-ge-gege": {
+      "zh": "我有一个哥哥。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-jia-ji-kou-ren": {
+      "zh": "你家几口人？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-nvpengyou-shi-zhongguo-ren": {
+      "zh": "我女朋友是中国人。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-you-nanpengyou-ma": {
+      "zh": "你有男朋友吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-shi-wo-laopo": {
+      "zh": "这是我老婆。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-laogong-zai-shangban": {
+      "zh": "我老公在上班。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "haizi-ji-sui-le": {
+      "zh": "孩子几岁了？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-qu-guo-beijing-ma": {
+      "zh": "你去过北京吗？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-mei-qu-guo": {
+      "zh": "我没去过。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-chi-guo-huoguo-ma": {
+      "zh": "你吃过火锅吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zuotian-ni-qu-nar-le": {
+      "zh": "昨天你去哪儿了？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yiqian-zhu-zai-shanghai": {
+      "zh": "我以前住在上海。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yijing-shuo-le": {
+      "zh": "我已经说了。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-gang-dao": {
+      "zh": "我刚到。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shenme-shihou-lai-de": {
+      "zh": "你什么时候来的？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-hai-mei-chi": {
+      "zh": "我还没吃。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-di-yi-ci-lai": {
+      "zh": "我第一次来。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-xihuan-zhongguo-ma": {
+      "zh": "你喜欢中国吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-hui-zuo-fan-ma": {
+      "zh": "你会做饭吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-pingshi-zuo-shenme": {
+      "zh": "你平时做什么？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-xihuan-yundong-ma": {
+      "zh": "你喜欢运动吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xihuan-kan-dianying": {
+      "zh": "我喜欢看电影。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-you-shenme-aihao": {
+      "zh": "你有什么爱好？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zhu-de-xiguan-ma": {
+      "zh": "你住得习惯吗？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-dasuan-dai-duo-jiu": {
+      "zh": "你打算待多久？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-weishenme-xue-zhongwen": {
+      "zh": "你为什么学中文？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yinwei-wo-dui-zhongguo-gan-xingqu": {
+      "zh": "因为我对中国感兴趣。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-tou-teng": {
+      "zh": "我头疼。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-duzi-teng": {
+      "zh": "我肚子疼。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ganmao-le": {
+      "zh": "我感冒了。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-fashao-le": {
+      "zh": "我发烧了。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yiyuan-zai-nar": {
+      "zh": "医院在哪儿？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "fujin-you-yaodian-ma": {
+      "zh": "附近有药店吗？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-mei-shi-ba": {
+      "zh": "你没事吧？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-dianr-le-ma": {
+      "zh": "好点儿了吗？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duo-he-dianr-shui": {
+      "zh": "多喝点儿水。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zao-dianr-xiuxi": {
+      "zh": "早点儿休息。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-tianqi-zhen-hao": {
+      "zh": "今天天气真好。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-re-a": {
+      "zh": "好热啊！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-youdianr-leng": {
+      "zh": "今天有点儿冷。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-yu-le": {
+      "zh": "下雨了。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dai-san-le-ma": {
+      "zh": "带伞了吗？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mingtian-hui-xia-yu-ma": {
+      "zh": "明天会下雨吗？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duo-chuan-dianr": {
+      "zh": "多穿点儿。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "waimian-leng-bu-leng": {
+      "zh": "外面冷不冷？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kongqi-bu-tai-hao": {
+      "zh": "空气不太好。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-ji-du": {
+      "zh": "今天几度？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zai-nar-shangban": {
+      "zh": "你在哪儿上班？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-jintian-bu-shangban": {
+      "zh": "我今天不上班。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xiaban-le": {
+      "zh": "我下班了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "gongzuo-mang-ma": {
+      "zh": "工作忙吗？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shi-xuesheng-ma": {
+      "zh": "你是学生吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xue-le-yi-nian-zhongwen": {
+      "zh": "我学了一年中文。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhongwen-tai-nan-le": {
+      "zh": "中文太难了。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-de-yingyu-hen-hao": {
+      "zh": "你的英语很好。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yao-kaihui": {
+      "zh": "我要开会。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-yao-jiaban": {
+      "zh": "今天要加班。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "fujin-you-chaoshi-ma": {
+      "zh": "附近有超市吗？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "li-zher-yuan-ma": {
+      "zh": "离这儿远吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jiu-zai-qianmian": {
+      "zh": "就在前面。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-zuobian": {
+      "zh": "在左边。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-duimian": {
+      "zh": "在对面。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zou-guoqu-yao-shi-fenzhong": {
+      "zh": "走过去要十分钟。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-shi-nar": {
+      "zh": "这是哪儿？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zhao-bu-dao": {
+      "zh": "我找不到。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-zhao-ditie-zhan": {
+      "zh": "我在找地铁站。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "cong-zher-zenme-zou": {
+      "zh": "从这儿怎么走？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ji-wei": {
+      "zh": "几位？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "liang-wei": {
+      "zh": "两位。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-weizi-ma": {
+      "zh": "有位子吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "neng-kan-yixia-caidan-ma": {
+      "zh": "能看一下菜单吗？",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yao-zhege-he-zhege": {
+      "zh": "我要这个和这个。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-yao-xiangcai": {
+      "zh": "不要香菜。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-de-cai-hai-mei-shang": {
+      "zh": "我们的菜还没上。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi-kai-fapiao-ma": {
+      "zh": "可以开发票吗？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-la-le": {
+      "zh": "太辣了！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "weidao-zenmeyang": {
+      "zh": "味道怎么样？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zenme-ban": {
+      "zh": "怎么办？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "chu-wenti-le": {
+      "zh": "出问题了。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "huai-le": {
+      "zh": "坏了。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-de-bao-diu-le": {
+      "zh": "我的包丢了。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-haoyisi-wo-gao-cuo-le": {
+      "zh": "不好意思，我搞错了。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-dui": {
+      "zh": "不对。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-guanxi": {
+      "zh": "没关系。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-mafan-le": {
+      "zh": "太麻烦了。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-bu-shi-guyi-de": {
+      "zh": "我不是故意的。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "lai-bu-ji-le": {
+      "zh": "来不及了。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "neng-bang-wo-pai-zhang-zhao-ma": {
+      "zh": "能帮我拍张照吗？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi-jie-wo-yixia-ma": {
+      "zh": "可以借我一下吗？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mafan-ni-le": {
+      "zh": "麻烦你了。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xinku-le": {
+      "zh": "辛苦了！",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zhen-hao": {
+      "zh": "你真好。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bang-wo-kan-yixia": {
+      "zh": "帮我看一下。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-neng-jinlai-ma": {
+      "zh": "我能进来吗？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zher-keyi-zuo-ma": {
+      "zh": "这儿可以坐吗？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "neng-kai-yixia-chuang-ma": {
+      "zh": "能开一下窗吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xiao-sheng-dianr": {
+      "zh": "小声点儿。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhege-bi-nage-hao": {
+      "zh": "这个比那个好。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "nage-hao": {
+      "zh": "哪个好？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dou-chabuduo": {
+      "zh": "都差不多。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-liang-ge-you-shenme-bu-yiyang": {
+      "zh": "这两个有什么不一样？",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-da-le": {
+      "zh": "太大了。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tai-xiao-le": {
+      "zh": "太小了。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hen-fangbian": {
+      "zh": "很方便。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-piaoliang-a": {
+      "zh": "好漂亮啊！",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ting-gui-de": {
+      "zh": "挺贵的。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hen-xinxian": {
+      "zh": "很新鲜。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xianzai-liang-dian-ban": {
+      "zh": "现在两点半。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-xingqi-ji": {
+      "zh": "今天星期几？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-xingqiwu": {
+      "zh": "今天星期五。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shengri-shi-na-tian": {
+      "zh": "你生日是哪天？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-ge-xingqi-jian": {
+      "zh": "下个星期见。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-deng-le-ban-ge-xiaoshi": {
+      "zh": "我等了半个小时。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zaoshang-ba-dian": {
+      "zh": "早上八点。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wanshang-jian": {
+      "zh": "晚上见。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mashang-jiu-hao": {
+      "zh": "马上就好。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kuai-dianr": {
+      "zh": "快点儿！",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-zhoumo-you-kong-ma": {
+      "zh": "你周末有空吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-qu-nar-wanr": {
+      "zh": "我们去哪儿玩儿？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-dou-xing": {
+      "zh": "我都行。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "na-jiu-zheyang-ba": {
+      "zh": "那就这样吧。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shuo-hao-le": {
+      "zh": "说好了！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-keneng-qu-bu-liao": {
+      "zh": "我可能去不了。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "gaitian-ba": {
+      "zh": "改天吧。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-jian-bu-san": {
+      "zh": "不见不散。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-ji-dian-xiaban": {
+      "zh": "你几点下班？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qu-jie-ni": {
+      "zh": "我去接你。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "he-dianr-shenme": {
+      "zh": "喝点儿什么？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-bu-he-jiu": {
+      "zh": "我不喝酒。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yao-re-de-haishi-bing-de": {
+      "zh": "要热的还是冰的？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "lai-bei-bing-de": {
+      "zh": "来杯冰的。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shao-tang": {
+      "zh": "少糖。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qing-ni-he-kafei": {
+      "zh": "我请你喝咖啡。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-he-duo-le": {
+      "zh": "你喝多了。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-he-yi-bei": {
+      "zh": "再喝一杯！",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-qu-changge-ba": {
+      "zh": "我们去唱歌吧。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "jintian-wanshang-you-shenme-anpai": {
+      "zh": "今天晚上有什么安排？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ding-le-fangjian": {
+      "zh": "我订了房间。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ji-dian-tuifang": {
+      "zh": "几点退房？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kongtiao-huai-le": {
+      "zh": "空调坏了。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "meiyou-re-shui": {
+      "zh": "没有热水。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi-bang-wo-jiao-liang-che-ma": {
+      "zh": "可以帮我叫辆车吗？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xiang-fang-yixia-xingli": {
+      "zh": "我想放一下行李。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-de-yaoshi-diu-le": {
+      "zh": "我的钥匙丢了。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-jia-hao-piaoliang": {
+      "zh": "你家好漂亮！",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "qing-zuo": {
+      "zh": "请坐。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bie-keqi": {
+      "zh": "别客气。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tian-na": {
+      "zh": "天哪！",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "aiya": {
+      "zh": "哎呀！",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhen-de": {
+      "zh": "真的？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-kexi": {
+      "zh": "好可惜。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "gongxi": {
+      "zh": "恭喜！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhen-lihai": {
+      "zh": "真厉害！",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-hen-xiang-ni": {
+      "zh": "我很想你。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-si-wo-le": {
+      "zh": "吓死我了！",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ai-ni": {
+      "zh": "我爱你。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-tongyi": {
+      "zh": "我同意。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhege-you-bie-de-yanse-ma": {
+      "zh": "这个有别的颜色吗？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yao-heise-de": {
+      "zh": "我要黑色的。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi-tui-ma": {
+      "zh": "可以退吗？",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-dazhe-ma": {
+      "zh": "有打折吗？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-shi-zhen-de-ma": {
+      "zh": "这是真的吗？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-kankan": {
+      "zh": "我再看看。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yao-daizi-ma": {
+      "zh": "要袋子吗？",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-yong-xiexie": {
+      "zh": "不用，谢谢。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-nar-fu-qian": {
+      "zh": "在哪儿付钱？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-de-yifu-hen-haokan": {
+      "zh": "你的衣服很好看。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zher-you-shenme-haowanr-de": {
+      "zh": "这儿有什么好玩儿的？",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "menpiao-duoshao-qian": {
+      "zh": "门票多少钱？",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ji-dian-kai-men": {
+      "zh": "几点开门？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ji-dian-guan-men": {
+      "zh": "几点关门？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ren-hao-duo-a": {
+      "zh": "人好多啊！",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-paidui-ba": {
+      "zh": "我们排队吧。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "keyi-paizhao-ma": {
+      "zh": "可以拍照吗？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "fengjing-zhen-mei": {
+      "zh": "风景真美。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-lei-si-le-zuo-yihuir-ba": {
+      "zh": "我累死了，坐一会儿吧。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-zou-cuo-le": {
+      "zh": "我们走错了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-hen-piaoliang": {
+      "zh": "她很漂亮。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-hen-shuai": {
+      "zh": "他很帅。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-hen-you-yisi": {
+      "zh": "他很有意思。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "tamen-shi-wo-de-pengyou": {
+      "zh": "他们是我的朋友。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "nimen-hao": {
+      "zh": "你们好！",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-shi-tongxue": {
+      "zh": "我们是同学。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ta-ren-ne": {
+      "zh": "她人呢？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-gen-shei-qu": {
+      "zh": "你跟谁去？",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yi-ge-ren": {
+      "zh": "我一个人。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-yiqi-qu-ba": {
+      "zh": "我们一起去吧。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-e-le-chi-shenme": {
+      "zh": "我饿了，吃什么？",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dian-waimai-ba": {
+      "zh": "点外卖吧。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "waimai-dao-le": {
+      "zh": "外卖到了。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kuaidi-dao-le": {
+      "zh": "快递到了。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-wang-dai-yaoshi-le": {
+      "zh": "我忘带钥匙了。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bang-wo-na-yixia": {
+      "zh": "帮我拿一下。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "guan-deng-ba": {
+      "zh": "关灯吧。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "kai-yixia-kongtiao": {
+      "zh": "开一下空调。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shengyin-da-yidianr": {
+      "zh": "声音大一点儿。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-qu-dao-laji": {
+      "zh": "我去倒垃圾。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-shou-bu-liao-le": {
+      "zh": "我受不了了。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-xinqing-bu-hao": {
+      "zh": "我心情不好。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-yali-hen-da": {
+      "zh": "我压力很大。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-hao-wuliao": {
+      "zh": "我好无聊。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-fangxin-le": {
+      "zh": "我放心了。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-pa": {
+      "zh": "我怕。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-tai-gaoxing-le": {
+      "zh": "我太高兴了！",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-kaixin-jiu-hao": {
+      "zh": "你开心就好。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-hao-xiang-jia": {
+      "zh": "我好想家。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "mei-yisi": {
+      "zh": "没意思。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-mei-tian-dou-he-kafei": {
+      "zh": "我每天都喝咖啡。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-jingchang-qu": {
+      "zh": "我经常去。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-shihou": {
+      "zh": "有时候。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-conglai-mei-chi-guo": {
+      "zh": "我从来没吃过。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yihuir-jian": {
+      "zh": "一会儿见。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-mashang-lai": {
+      "zh": "我马上来。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "deng-wo-yixia": {
+      "zh": "等我一下。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "manman-chi": {
+      "zh": "慢慢吃。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xian-zheyang-ba": {
+      "zh": "先这样吧。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yihou-zai-shuo": {
+      "zh": "以后再说。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wei": {
+      "zh": "喂？",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-ting-de-dao-ma": {
+      "zh": "你听得到吗？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xinhao-bu-hao": {
+      "zh": "信号不好。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-da-cuo-le": {
+      "zh": "你打错了。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-zai-kaiche-deng-yixia-shuo": {
+      "zh": "我在开车，等一下说。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "gei-wo-fa-ge-dingwei": {
+      "zh": "给我发个定位。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-mei-kandao-xiaoxi": {
+      "zh": "我没看到消息。",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-hui-wo-yixia": {
+      "zh": "你回我一下。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-gei-ni-zhuan-qian": {
+      "zh": "我给你转钱。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xian-gua-le-a": {
+      "zh": "先挂了啊。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-chi-su": {
+      "zh": "我吃素。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-neng-chi-la-ma": {
+      "zh": "你能吃辣吗？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-xiang-a": {
+      "zh": "好香啊！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "changchang-zhege": {
+      "zh": "尝尝这个。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ziji-lai": {
+      "zh": "我自己来。",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "duo-chi-dianr": {
+      "zh": "多吃点儿！",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zai-lai-yi-ge": {
+      "zh": "再来一个。",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "women-dian-cai-ba": {
+      "zh": "我们点菜吧。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhe-jia-dian-hen-youming": {
+      "zh": "这家店很有名。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-ci-zai-lai": {
+      "zh": "下次再来！",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-jueding-le": {
+      "zh": "我决定了。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-jueding-ba": {
+      "zh": "你决定吧。",
+      "voice": "shimmer",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-bu-queding": {
+      "zh": "我不确定。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yinggai-keyi": {
+      "zh": "应该可以。",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "bu-yiding": {
+      "zh": "不一定。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "dangran-keyi": {
+      "zh": "当然可以。",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-juede-bu-xing": {
+      "zh": "我觉得不行。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shuo-ne": {
+      "zh": "你说呢？",
+      "voice": "nova",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ting-ni-de": {
+      "zh": "听你的。",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "hao-zhuyi": {
+      "zh": "好主意！",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ruguo-xia-yu-jiu-bu-qu-le": {
+      "zh": "如果下雨就不去了。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-bu-zhidao-zenme-shuo": {
+      "zh": "我不知道怎么说。",
+      "voice": "onyx",
+      "model": "gpt-4o-mini-tts"
+    },
+    "suiran-gui-danshi-hen-haochi": {
+      "zh": "虽然贵，但是很好吃。",
+      "voice": "ash",
+      "model": "gpt-4o-mini-tts"
+    },
+    "suoyi-ne": {
+      "zh": "所以呢？",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ranhou-ne": {
+      "zh": "然后呢？",
+      "voice": "sage",
+      "model": "gpt-4o-mini-tts"
+    },
+    "fanzheng-wo-bu-qu": {
+      "zh": "反正我不去。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "qishi-wo-bu-tai-dong": {
+      "zh": "其实我不太懂。",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-haishi-bu-mingbai": {
+      "zh": "我还是不明白。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ni-shi-shuo-mingtian": {
+      "zh": "你是说明天？",
+      "voice": "verse",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-ye-bu-zhidao": {
+      "zh": "我也不知道。",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "baochi-lianxi": {
+      "zh": "保持联系！",
+      "voice": "fable",
+      "model": "gpt-4o-mini-tts"
+    },
+    "wo-hui-xiang-ni-de": {
+      "zh": "我会想你的。",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "yilu-ping-an": {
+      "zh": "一路平安！",
+      "voice": "cedar",
+      "model": "gpt-4o-mini-tts"
+    },
+    "you-kong-lai-wanr": {
+      "zh": "有空来玩儿。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "ti-wo-wenhao": {
+      "zh": "替我问好。",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    },
+    "zhu-ni-haoyun": {
+      "zh": "祝你好运！",
+      "voice": "alloy",
+      "model": "gpt-4o-mini-tts"
+    },
+    "shengri-kuaile": {
+      "zh": "生日快乐！",
+      "voice": "echo",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xinnian-kuaile": {
+      "zh": "新年快乐！",
+      "voice": "marin",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xiexie-ni-qingke": {
+      "zh": "谢谢你请客！",
+      "voice": "coral",
+      "model": "gpt-4o-mini-tts"
+    },
+    "xia-ci-jian": {
+      "zh": "下次见！",
+      "voice": "ballad",
+      "model": "gpt-4o-mini-tts"
+    }
+  }
+}

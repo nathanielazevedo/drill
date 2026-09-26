@@ -38,6 +38,29 @@ npm install
 npm run dev
 ```
 
+## Record the Mandarin sentences
+
+Mandarin Sentences plays a recording of each sentence when there is one, and falls back to the
+device's own Mandarin voice when there isn't. The recordings are made with OpenAI's text-to-speech by
+a script you run on your own machine; the app only plays the saved MP3s and never calls OpenAI.
+
+```sh
+echo 'OPENAI_API_KEY=sk-...' >> .env.local        # git ignores .env.local
+npm run generate:sentence-audio -- --sample       # 8 test sentences in every voice (about 100 short clips)
+npm run dev                                       # then open http://localhost:5173/voice-lab.html
+npm run generate:sentence-audio                   # records only what's missing or changed
+```
+
+The voice lab plays the samples side by side: every voice reading a sentence, or one voice reading
+them all. Switch on the voices you like and save; that writes `scripts/sentence-voices.json`. With
+several voices, each sentence keeps to one of them, so the recordings alternate between speakers. The
+lab and its save endpoint only exist on the dev server, and the samples stay on your machine.
+
+The files land in `public/audio/mandarin-sentences/`, listed in
+`src/categories/mandarin-sentences/data/audio.json`; commit both. `--dry-run` lists what would be
+recorded, `--only id,id` records just those sentences, and `--force` records everything again. Changing
+the chosen voices re-records only the sentences whose voice changed.
+
 ## Add a category
 
 A category is a data set (`DrillTarget[]`: id, name, a region/type for filtering, and a focus
