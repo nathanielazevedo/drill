@@ -94,6 +94,15 @@
   fill: #dc2626;
   stroke: #dc2626;
 }
+/* Marks left behind by right answers in this run (Mandarin Map's bridges between blocks). */
+.trail {
+  display: none;
+  fill: rgba(22, 163, 74, 0.4);
+  pointer-events: none;
+}
+.trail.kept {
+  display: inline;
+}
 .borders {
   fill: none;
   stroke: rgba(15, 23, 42, 0.18);

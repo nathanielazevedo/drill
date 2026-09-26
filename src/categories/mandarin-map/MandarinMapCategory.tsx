@@ -68,6 +68,9 @@ const outlines: TargetOutline[] = map.words.map((w) => {
   return { id: w.id, d: shapeById.get(a)!.d + shapeById.get(b)!.d + w.bridge };
 });
 
+// Each word answered right leaves its bridge on the map for the rest of the run.
+const trails: TargetOutline[] = map.words.map((w) => ({ id: w.id, d: w.bridge }));
+
 const copy: DrillCopy = { noun: 'word', nounPlural: 'words', groupLabel: 'Continent', wholeSet: 'The whole map' };
 
 const runDescription = 'Blocks first, then each word once you know both its parts. One miss ends the run.';
@@ -93,7 +96,7 @@ function Stage({ target, outcome, run }: { target: DrillTarget; outcome: 'ok' | 
         </span>
         <span className="text-sm text-muted-foreground">mean?</span>
       </div>
-      <WorldMap world={map} outlines={outlines} targetId={target.id} targetGeo={targetGeo} outcome={outcome} run={run} />
+      <WorldMap world={map} outlines={outlines} trails={trails} targetId={target.id} targetGeo={targetGeo} outcome={outcome} run={run} />
     </div>
   );
 }

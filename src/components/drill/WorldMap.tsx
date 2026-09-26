@@ -22,6 +22,8 @@ interface WorldMapProps {
   world: WorldData;
   /** outlines for targets that aren't one of the basemap's own shapes */
   outlines?: TargetOutline[];
+  /** marks that stay on the map once their target is answered right, until the run ends (Mandarin Map's bridges) */
+  trails?: TargetOutline[];
   targetId: string | null;
   targetGeo: TargetGeo | null;
   outcome: 'ok' | 'bad' | null;
@@ -54,7 +56,7 @@ const escapeXml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 // Layers, bottom to top: sea, grey context, the fillable shapes, lakes (over the land, since the
 // world data counts lakes as land), the current target's outline, borders, then any labels.
-function buildSvgInner(world: WorldData, outlines: TargetOutline[]): string {
+function buildSvgInner(world: WorldData, outlines: TargetOutline[], trails: TargetOutline[]): string {
   const { w: W, top: TOP, bottom: BOT, ocean, graticule, context, lakes, borders, countries, labels = [] } = world;
   return `
     <path class="sea" d="${ocean}"/>
@@ -66,6 +68,7 @@ function buildSvgInner(world: WorldData, outlines: TargetOutline[]): string {
     ${lakes ? `<path class="lake" d="${lakes}"/>` : ''}
     <g id="outlines">${outlines.map((o) => `<path class="feature-shape" data-id="${o.id}" d="${o.d}"/>`).join('')}</g>
     <path class="borders" d="${borders}"/>
+    <g id="trails">${trails.map((t) => `<path class="trail" data-id="${t.id}" d="${t.d}"/>`).join('')}</g>
     ${world.noWrap ? '' : `<path class="sea-edge" d="M0,${TOP}H${W}M0,${BOT}H${W}"/>`}
     <g class="map-labels">${labels
       .map(
@@ -81,7 +84,7 @@ function buildSvgInner(world: WorldData, outlines: TargetOutline[]): string {
  * harmless no-op otherwise, which is how categories with no fillable shape (lakes, mountain
  * ranges, ...) still get the locator without any per-target geometry of their own.
  */
-export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, run }: WorldMapProps) {
+export function WorldMap({ world, outlines = [], trails = [], targetId, targetGeo, outcome, run }: WorldMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<SVGGElement>(null);
@@ -115,11 +118,12 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
 
     const world1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     world1.setAttribute('id', 'world');
-    world1.innerHTML = buildSvgInner(world, outlines);
+    world1.innerHTML = buildSvgInner(world, outlines, trails);
     svg.insertBefore(world1, overlay);
 
     // A copy either side, so panning past the date line carries on around the world.
     const wraps = !world.noWrap;
+    const copies: SVGUseElement[] = [];
     if (wraps) {
       const useA = document.createElementNS('http://www.w3.org/2000/svg', 'use');
       useA.setAttribute('href', '#world');
@@ -129,6 +133,7 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
       useB.setAttribute('x', String(W));
       svg.insertBefore(useA, overlay);
       svg.insertBefore(useB, overlay);
+      copies.push(useA, useB);
     }
 
     const land = world1.querySelector('#land')!;
@@ -139,6 +144,8 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
     const outlineEls = new Map<string, SVGPathElement>(
       [...world1.querySelector('#outlines')!.children].map((el) => [el.getAttribute('data-id')!, el as SVGPathElement]),
     );
+
+    const trailEls = [...world1.querySelectorAll<SVGPathElement>('#trails .trail')];
 
     const labelEls = new Map<string, SVGTextElement>(
       [...world1.querySelectorAll<SVGTextElement>('.map-labels text[data-id]')].map((el) => [el.dataset.id!, el]),
@@ -302,6 +309,8 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
         // keep the current target's highlight: this runs after setTarget whenever the run moves on
         el.setAttribute('class', 'c' + (pool.has(id) ? '' : ' out') + (r ? ' ' + r : '') + (id === e.targetId ? ' target' : ''));
       }
+      // a new run has no answers yet, so this also clears the last run's trails
+      for (const el of trailEls) el.classList.toggle('kept', runState?.results[el.dataset.id!] === 'ok');
     }
 
     const clampView = () => {
@@ -381,6 +390,10 @@ export function WorldMap({ world, outlines = [], targetId, targetGeo, outcome, r
     engineApiRef.current = { flyTo, targetView, setTarget, markOutcome, paintPool, worldView };
 
     return () => {
+      // Take the drawing down too: a remount (React does one in development) draws it afresh, and a
+      // leftover copy underneath would keep the old run's highlights.
+      world1.remove();
+      for (const el of copies) el.remove();
       ro.disconnect();
       svg.removeEventListener('pointerdown', onPointerDown);
       svg.removeEventListener('pointermove', onPointerMove);
